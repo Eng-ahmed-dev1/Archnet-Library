@@ -1,8 +1,10 @@
+using Archnet.Cli.Attributes;
 using Archnet.Cli.Services;
 using Archnet.Core.Enums;
 using Archnet.Core.Models;
 namespace Archnet.Cli.Commands
 {
+    [Command("new")]
     public class NewCommand : IArchCommand
     {
         public string Name => "new";
