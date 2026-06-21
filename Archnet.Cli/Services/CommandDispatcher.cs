@@ -1,17 +1,18 @@
 using Archnet.Cli.Commands;
+using Archnet.Cli.Models;
 
 namespace Archnet.Cli.Services
 {
     public sealed class CommandDispatcher
     {
-        private readonly IEnumerable<dynamic> _commands;
+        private readonly IEnumerable<CommandDescriptor> _commands;
 
-        public CommandDispatcher(IEnumerable<dynamic> commands)
+        public CommandDispatcher(IEnumerable<CommandDescriptor> commands)
         {
             _commands = commands;
         }
 
-        public async Task DispatchAsync(string command, string[] args)
+        public async Task DispatchAsync(string command, CommandContext context)
         {
             var target =
                 _commands.FirstOrDefault(x => x.Name == command);
@@ -22,7 +23,7 @@ namespace Archnet.Cli.Services
                 return;
             }
 
-            await target.Command.ExecuteAsync(args);
+            await target.Command.ExecuteAsync(context);
         }
     }
 }
