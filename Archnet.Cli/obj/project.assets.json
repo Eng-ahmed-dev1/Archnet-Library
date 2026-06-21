@@ -52,7 +52,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "/home/amed/Desktop/Repos/Archnet/Archnet.Cli/Archnet.Cli.csproj",
-      "projectName": "Archnet.Cli",
+      "projectName": "Archnet",
       "projectPath": "/home/amed/Desktop/Repos/Archnet/Archnet.Cli/Archnet.Cli.csproj",
       "packagesPath": "/home/amed/.nuget/packages/",
       "outputPath": "/home/amed/Desktop/Repos/Archnet/Archnet.Cli/obj/",

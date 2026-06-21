@@ -1,7 +1,8 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Archnet.Cli.Attributes;
 using Archnet.Cli.Commands;
 using Archnet.Cli.Models;
+using Archnet.Cli.Parsing;
 using Archnet.Cli.Services;
 
 var commands =
@@ -13,17 +14,10 @@ var commands =
         .Select(t =>
         {
             var attr = t.GetCustomAttribute<CommandAttribute>();
-
-            if (attr is null)
-                return null;
+            if (attr is null) return null;
 
             var instance = (IArchCommand)Activator.CreateInstance(t)!;
-
-            return new CommandDescriptor
-            {
-                Name = attr.Name,
-                Command = instance
-            };
+            return new CommandDescriptor { Name = attr.Name, Command = instance };
         })
         .Where(x => x is not null)
         .Cast<CommandDescriptor>()
@@ -33,14 +27,11 @@ var dispatcher = new CommandDispatcher(commands);
 
 if (args.Length == 0)
 {
-    Console.WriteLine("Usage: archnet <command>");
+    await dispatcher.DispatchAsync("help", new CommandContext { Command = "help" });
     return;
 }
 
-var command = args[0];
-var commandArgs = args.Skip(1).ToArray();
-var context = new CommandContext
-{
-    Command = command
-};
-await dispatcher.DispatchAsync(command, context);
+// استخدمنا ArgumentParser الموجودة بدل تكرار المنطق
+var context = ArgumentParser.Parse(args);
+
+await dispatcher.DispatchAsync(context.Command, context);

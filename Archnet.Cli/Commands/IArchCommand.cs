@@ -1,3 +1,5 @@
+using Archnet.Cli.Models;
+
 namespace Archnet.Cli.Commands;
 
 public interface IArchCommand
