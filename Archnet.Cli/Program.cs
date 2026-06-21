@@ -1,13 +1,15 @@
 ﻿using System.Reflection;
 using Archnet.Cli.Attributes;
 using Archnet.Cli.Commands;
+using Archnet.Cli.Models;
 using Archnet.Cli.Services;
 
 var commands =
     Assembly.GetExecutingAssembly()
         .GetTypes()
-        .Where(t => typeof(IArchCommand).IsAssignableFrom(t)
-                    && t is { IsClass: true, IsAbstract: false })
+        .Where(t =>
+            typeof(IArchCommand).IsAssignableFrom(t) &&
+            t is { IsClass: true, IsAbstract: false })
         .Select(t =>
         {
             var attr = t.GetCustomAttribute<CommandAttribute>();
@@ -17,22 +19,28 @@ var commands =
 
             var instance = (IArchCommand)Activator.CreateInstance(t)!;
 
-            return new
+            return new CommandDescriptor
             {
                 Name = attr.Name,
                 Command = instance
             };
         })
-        .Where(x => x != null)
-        .ToList()!;
+        .Where(x => x is not null)
+        .Cast<CommandDescriptor>()
+        .ToList();
 
-var dispatcher = new CommandDispatcher(commands!);
+var dispatcher = new CommandDispatcher(commands);
+
 if (args.Length == 0)
 {
-    Console.WriteLine("Usage : archnet <command>");
+    Console.WriteLine("Usage: archnet <command>");
     return;
 }
+
 var command = args[0];
 var commandArgs = args.Skip(1).ToArray();
-
-await dispatcher.DispatchAsync(command, commandArgs);
+var context = new CommandContext
+{
+    Command = command
+};
+await dispatcher.DispatchAsync(command, context);
