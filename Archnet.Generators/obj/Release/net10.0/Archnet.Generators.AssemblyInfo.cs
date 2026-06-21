@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Archnet.Generators")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c785e55ad64c48e576312d3179a13aed9d396b76")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de082d30621863dcf18b0fa16bf1dee67e0cf57c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Archnet.Generators")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Archnet.Generators")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

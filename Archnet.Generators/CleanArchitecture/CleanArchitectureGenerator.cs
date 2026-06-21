@@ -17,7 +17,9 @@ public class CleanArchitectureGenerator : IArchitectureGenerator
         Directory.CreateDirectory(srcPath);
 
         await DotnetCliService.RunAsync($"new sln -n {name}", rootPath);
-        var slnPath = Path.Combine(rootPath, $"{name}.sln");
+
+        var slnPath = Directory.GetFiles(rootPath, $"{name}.sln*").FirstOrDefault()
+            ?? throw new Exception($"Solution file not found after creation in {rootPath}");
 
         var domainPath = Path.Combine(srcPath, $"{name}.Domain");
         var applicationPath = Path.Combine(srcPath, $"{name}.Application");
