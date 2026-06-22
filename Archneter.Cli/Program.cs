@@ -16,6 +16,7 @@ services.AddTransient<DryRunCliService>();
 services.AddSingleton<ArgumentParser>();
 services.AddSingleton<CommandRegistry>();
 services.AddSingleton<CommandDispatcher>();
+services.AddSingleton<GeneratorFactory>();
 
 // Dynamically Register All Commands for DI resolution
 var commandTypes = typeof(IArchCommand).Assembly.GetTypes()
