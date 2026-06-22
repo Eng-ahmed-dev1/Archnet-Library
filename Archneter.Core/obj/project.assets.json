@@ -13,9 +13,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archnet.Core.csproj",
-      "projectName": "Archnet.Core",
-      "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archnet.Core.csproj",
+      "projectUniqueName": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archneter.Core.csproj",
+      "projectName": "Archneter.Core",
+      "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archneter.Core.csproj",
       "packagesPath": "/home/amed/.nuget/packages/",
       "outputPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/obj/",
       "projectStyle": "PackageReference",

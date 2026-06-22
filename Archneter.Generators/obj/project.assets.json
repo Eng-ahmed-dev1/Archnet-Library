@@ -2,28 +2,28 @@
   "version": 3,
   "targets": {
     "net10.0": {
-      "Archnet.Core/1.0.0": {
+      "Archneter.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "compile": {
-          "bin/placeholder/Archnet.Core.dll": {}
+          "bin/placeholder/Archneter.Core.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Archnet.Core.dll": {}
+          "bin/placeholder/Archneter.Core.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "Archnet.Core/1.0.0": {
+    "Archneter.Core/1.0.0": {
       "type": "project",
-      "path": "../Archneter.Core/Archnet.Core.csproj",
-      "msbuildProject": "../Archneter.Core/Archnet.Core.csproj"
+      "path": "../Archneter.Core/Archneter.Core.csproj",
+      "msbuildProject": "../Archneter.Core/Archneter.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
-      "Archnet.Core >= 1.0.0"
+      "Archneter.Core >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -32,9 +32,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/Archnet.Generators.csproj",
-      "projectName": "Archnet.Generators",
-      "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/Archnet.Generators.csproj",
+      "projectUniqueName": "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/Archneter.Generators.csproj",
+      "projectName": "Archneter.Generators",
+      "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/Archneter.Generators.csproj",
       "packagesPath": "/home/amed/.nuget/packages/",
       "outputPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/obj/",
       "projectStyle": "PackageReference",
@@ -52,8 +52,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archnet.Core.csproj": {
-              "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archnet.Core.csproj"
+            "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archneter.Core.csproj": {
+              "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archneter.Core.csproj"
             }
           }
         }

@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using Archnet.Cli.Attributes;
-using Archnet.Cli.Commands;
-using Archnet.Cli.Models;
-using Archnet.Cli.Parsing;
-using Archnet.Cli.Services;
+using Archneter.Cli.Attributes;
+using Archneter.Cli.Commands;
+using Archneter.Cli.Models;
+using Archneter.Cli.Parsing;
+using Archneter.Cli.Services;
 
 var commands =
     Assembly.GetExecutingAssembly()

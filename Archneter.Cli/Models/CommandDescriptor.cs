@@ -1,6 +1,4 @@
-using Archnet.Cli.Commands;
-
-namespace Archnet.Cli.Models
+namespace Archneter.Cli.Models
 {
     public class CommandDescriptor
     {

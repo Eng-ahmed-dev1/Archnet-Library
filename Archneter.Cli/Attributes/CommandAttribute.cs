@@ -1,4 +1,4 @@
-namespace Archnet.Cli.Attributes
+namespace Archneter.Cli.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class CommandAttribute : Attribute

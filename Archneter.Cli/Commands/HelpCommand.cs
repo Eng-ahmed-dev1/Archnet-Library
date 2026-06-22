@@ -1,8 +1,8 @@
 using System.Reflection;
-using Archnet.Cli.Attributes;
-using Archnet.Cli.Models;
+using Archneter.Cli.Attributes;
+using Archneter.Cli.Models;
 
-namespace Archnet.Cli.Commands;
+namespace Archneter.Cli.Commands;
 
 [Command("help")]
 [Description("Display available commands")]

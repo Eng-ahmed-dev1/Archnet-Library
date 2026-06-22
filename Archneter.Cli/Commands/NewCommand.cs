@@ -1,10 +1,10 @@
-using Archnet.Cli.Attributes;
-using Archnet.Cli.Services;
-using Archnet.Core.Enums;
-using Archnet.Core.Models;
-using Archnet.Cli.Models;
+using Archneter.Cli.Attributes;
+using Archneter.Cli.Services;
+using Archneter.Core.Enums;
+using Archneter.Core.Models;
+using Archneter.Cli.Models;
 
-namespace Archnet.Cli.Commands
+namespace Archneter.Cli.Commands
 {
     [Command("new")]
     [Description("Create a new architecture project")]

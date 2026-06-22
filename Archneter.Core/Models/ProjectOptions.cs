@@ -1,6 +1,6 @@
-using Archnet.Core.Enums;
+using Archneter.Core.Enums;
 
-namespace Archnet.Core.Models
+namespace Archneter.Core.Models
 {
     public sealed class ProjectOptions
     {

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Archneter.Core\Archnet.Core.csproj" />
+    <ProjectReference Include="..\Archneter.Core\Archneter.Core.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -1,6 +1,6 @@
-using Archnet.Cli.Models;
+using Archneter.Cli.Models;
 
-namespace Archnet.Cli.Commands
+namespace Archneter.Cli.Commands
 {
     public interface IArchCommand
     {

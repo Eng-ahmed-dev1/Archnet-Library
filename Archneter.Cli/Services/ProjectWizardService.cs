@@ -1,7 +1,6 @@
-using Archnet.Core.Enums;
-using Archnet.Core.Models;
 
-namespace Archnet.Cli.Services
+
+namespace Archneter.Cli.Services
 {
     public class ProjectWizardService
     {

@@ -1,6 +1,7 @@
-namespace Archnet.Cli.Parsing
+using Archneter.Cli.Models;
+
+namespace Archneter.Cli.Parsing
 {
-    using Archnet.Cli.Models;
 
     public static class ArgumentParser
     {

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Archnet.Generators.Infrastructure
+namespace Archneter.Generators.Infrastructure
 {
     public static class DotnetCliService
     {

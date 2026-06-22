@@ -1,7 +1,7 @@
-using Archnet.Cli.Commands;
-using Archnet.Cli.Models;
 
-namespace Archnet.Cli.Services
+using Archneter.Cli.Models;
+
+namespace Archneter.Cli.Services
 {
     public sealed class CommandDispatcher
     {

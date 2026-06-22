@@ -1,4 +1,4 @@
-namespace Archnet.Core.Enums
+namespace Archneter.Core.Enums
 {
     public enum ArchitectureType
     {

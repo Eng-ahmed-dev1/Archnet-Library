@@ -1,8 +1,8 @@
-using Archnet.Core.Abstractions;
-using Archnet.Core.Models;
-using Archnet.Generators.Infrastructure;
+using Archneter.Core.Abstractions;
+using Archneter.Core.Models;
+using Archneter.Generators.Infrastructure;
 
-namespace Archnet.Generators.CleanArchitecture
+namespace Archneter.Generators.CleanArchitecture
 {
     public class CleanArchitectureGenerator : IArchitectureGenerator
     {

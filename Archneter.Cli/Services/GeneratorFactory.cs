@@ -1,8 +1,8 @@
-using Archnet.Core.Abstractions;
-using Archnet.Core.Enums;
-using Archnet.Generators.CleanArchitecture;
+using Archneter.Core.Abstractions;
+using Archneter.Core.Enums;
+using Archneter.Generators.CleanArchitecture;
 
-namespace Archnet.Cli.Services
+namespace Archneter.Cli.Services
 {
     public sealed class GeneratorFactory
     {

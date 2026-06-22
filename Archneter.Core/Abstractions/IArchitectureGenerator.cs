@@ -1,6 +1,6 @@
-using Archnet.Core.Models;
+using Archneter.Core.Models;
 
-namespace Archnet.Core.Abstractions
+namespace Archneter.Core.Abstractions
 {
     public interface IArchitectureGenerator
     {

@@ -2,58 +2,58 @@
   "version": 3,
   "targets": {
     "net10.0": {
-      "Archnet.Core/1.0.0": {
+      "Archneter.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "compile": {
-          "bin/placeholder/Archnet.Core.dll": {}
+          "bin/placeholder/Archneter.Core.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Archnet.Core.dll": {}
+          "bin/placeholder/Archneter.Core.dll": {}
         }
       },
-      "Archnet.Generators/1.0.0": {
+      "Archneter.Generators/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Archnet.Core": "1.0.0"
+          "Archneter.Core": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/Archnet.Generators.dll": {}
+          "bin/placeholder/Archneter.Generators.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Archnet.Generators.dll": {}
+          "bin/placeholder/Archneter.Generators.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "Archnet.Core/1.0.0": {
+    "Archneter.Core/1.0.0": {
       "type": "project",
-      "path": "../Archneter.Core/Archnet.Core.csproj",
-      "msbuildProject": "../Archneter.Core/Archnet.Core.csproj"
+      "path": "../Archneter.Core/Archneter.Core.csproj",
+      "msbuildProject": "../Archneter.Core/Archneter.Core.csproj"
     },
-    "Archnet.Generators/1.0.0": {
+    "Archneter.Generators/1.0.0": {
       "type": "project",
-      "path": "../Archneter.Generators/Archnet.Generators.csproj",
-      "msbuildProject": "../Archneter.Generators/Archnet.Generators.csproj"
+      "path": "../Archneter.Generators/Archneter.Generators.csproj",
+      "msbuildProject": "../Archneter.Generators/Archneter.Generators.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
-      "Archnet.Core >= 1.0.0",
-      "Archnet.Generators >= 1.0.0"
+      "Archneter.Core >= 1.0.0",
+      "Archneter.Generators >= 1.0.0"
     ]
   },
   "packageFolders": {
     "/home/amed/.nuget/packages/": {}
   },
   "project": {
-    "version": "1.0.2",
+    "version": "1.0.3",
     "restore": {
-      "projectUniqueName": "/home/amed/Desktop/Repos/Archnet/Archneter.Cli/Archnet.Cli.csproj",
+      "projectUniqueName": "/home/amed/Desktop/Repos/Archnet/Archneter.Cli/Archneter.Cli.csproj",
       "projectName": "Archneter",
-      "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Cli/Archnet.Cli.csproj",
+      "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Cli/Archneter.Cli.csproj",
       "packagesPath": "/home/amed/.nuget/packages/",
       "outputPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Cli/obj/",
       "projectStyle": "PackageReference",
@@ -71,11 +71,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archnet.Core.csproj": {
-              "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archnet.Core.csproj"
+            "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archneter.Core.csproj": {
+              "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archneter.Core.csproj"
             },
-            "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/Archnet.Generators.csproj": {
-              "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/Archnet.Generators.csproj"
+            "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/Archneter.Generators.csproj": {
+              "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Generators/Archneter.Generators.csproj"
             }
           }
         }
