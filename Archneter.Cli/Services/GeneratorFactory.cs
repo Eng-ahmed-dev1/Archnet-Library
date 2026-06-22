@@ -1,22 +1,23 @@
 using Archneter.Core.Abstractions;
 using Archneter.Core.Enums;
 using Archneter.Generators.CleanArchitecture;
+using Archneter.Generators.Infrastructure;
 
 namespace Archneter.Cli.Services
 {
-    public sealed class GeneratorFactory
+    public class GeneratorFactory
     {
-        public IArchitectureGenerator Get(ArchitectureType type)
-        {
-            return type switch
-            {
-                ArchitectureType.CleanArchitecture
-                => new CleanArchitectureGenerator(),
+        private readonly ICliService _cli;
 
-                _ => throw new NotImplementedException(
-                    "Architecture not supported yet"
-                )
-            };
+        public GeneratorFactory(ICliService cli)
+        {
+            _cli = cli;
         }
+
+        public IArchitectureGenerator Get(ArchitectureType architecture) => architecture switch
+        {
+            ArchitectureType.CleanArchitecture => new CleanArchitectureGenerator(_cli),
+            _ => throw new NotSupportedException($"Architecture '{architecture}' is not yet supported.")
+        };
     }
 }

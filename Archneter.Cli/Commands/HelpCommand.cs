@@ -1,4 +1,3 @@
-using System.Reflection;
 using Archneter.Cli.Attributes;
 using Archneter.Cli.Models;
 
@@ -29,11 +28,15 @@ public sealed class HelpCommand : IArchCommand
         Console.WriteLine();
         Console.WriteLine("  --tests <true|false>         Generate test projects (default: false)");
         Console.WriteLine();
+        Console.WriteLine("  --dry-run                    Preview commands without creating any files");
+        Console.WriteLine();
         Console.WriteLine("Examples:");
         Console.WriteLine();
         Console.WriteLine("  archneter new MyProject --arch clean");
         Console.WriteLine("  archneter new MyProject --arch clean --tests true");
         Console.WriteLine("  archneter new MyProject --arch microservices --tests true");
+        Console.WriteLine("  archneter new MyProject --arch clean --dry-run");
+        Console.WriteLine("  archneter new MyProject --arch clean --tests true --dry-run");
         Console.WriteLine();
 
         return Task.CompletedTask;

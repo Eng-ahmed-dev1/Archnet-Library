@@ -2,10 +2,18 @@ using Archneter.Cli.Models;
 
 namespace Archneter.Cli.Parsing
 {
-
-    public static class ArgumentParser
+    public class ArgumentParser
     {
-        public static CommandContext Parse(string[] args)
+        /// <summary>
+        /// Known boolean flags (no value following them).
+        /// Everything else starting with '--' that has a value is treated as an option.
+        /// </summary>
+        private static readonly HashSet<string> _knownFlags = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "--dry-run"
+        };
+
+        public CommandContext Parse(string[] args)
         {
             var context = new CommandContext();
 
@@ -14,17 +22,30 @@ namespace Archneter.Cli.Parsing
 
             context.Command = args[0];
 
-            if (args.Length > 1)
+            if (args.Length == 1)
+                return context;
+
+            // Second positional argument (no '--' prefix) is the project name
+            if (!args[1].StartsWith("--"))
                 context.ProjectName = args[1];
 
-            for (int i = 2; i < args.Length; i++)
+            for (int i = 1; i < args.Length; i++)
             {
-                if (args[i].StartsWith("--") && i + 1 < args.Length)
-                {
-                    var key = args[i];
-                    var value = args[i + 1];
+                var arg = args[i];
 
-                    context.Options[key] = value;
+                if (!arg.StartsWith("--"))
+                    continue;
+
+                if (_knownFlags.Contains(arg))
+                {
+                    context.Flags.Add(arg);
+                    continue;
+                }
+
+                // Key-value option: --key value
+                if (i + 1 < args.Length && !args[i + 1].StartsWith("--"))
+                {
+                    context.Options[arg] = args[i + 1];
                     i++;
                 }
             }

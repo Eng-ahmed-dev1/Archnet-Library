@@ -2,9 +2,9 @@ using System.Diagnostics;
 
 namespace Archneter.Generators.Infrastructure
 {
-    public static class DotnetCliService
+    public class DotnetCliService : ICliService
     {
-        public static async Task RunAsync(string arguments, string workingDirectory)
+        public async Task RunAsync(string arguments, string workingDirectory)
         {
             var process = new Process();
 
@@ -30,13 +30,13 @@ namespace Archneter.Generators.Infrastructure
                 Console.WriteLine(output);
         }
 
-        public static Task CreateProjectAsync(string template, string projectName, string outputPath)
+        public Task CreateProjectAsync(string template, string projectName, string outputPath)
             => RunAsync($"new {template} -n {projectName} -o \"{outputPath}\"", Directory.GetCurrentDirectory());
 
-        public static Task AddToSolutionAsync(string slnPath, string projectPath)
+        public Task AddToSolutionAsync(string slnPath, string projectPath)
             => RunAsync($"sln \"{slnPath}\" add \"{projectPath}\"", Directory.GetCurrentDirectory());
 
-        public static Task AddReferenceAsync(string fromProjectPath, string toProjectPath)
+        public Task AddReferenceAsync(string fromProjectPath, string toProjectPath)
             => RunAsync($"add \"{fromProjectPath}\" reference \"{toProjectPath}\"", Directory.GetCurrentDirectory());
     }
 }

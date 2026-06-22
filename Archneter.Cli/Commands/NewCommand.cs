@@ -1,8 +1,9 @@
 using Archneter.Cli.Attributes;
+using Archneter.Cli.Models;
 using Archneter.Cli.Services;
 using Archneter.Core.Enums;
 using Archneter.Core.Models;
-using Archneter.Cli.Models;
+using Archneter.Generators.Infrastructure;
 
 namespace Archneter.Cli.Commands
 {
@@ -14,12 +15,13 @@ namespace Archneter.Cli.Commands
         {
             if (string.IsNullOrWhiteSpace(context.ProjectName))
             {
-                Console.WriteLine("Error: project name is required. Usage: archnet new <name> [--arch clean] [--tests true]");
+                Console.WriteLine("Error: project name is required. Usage: archneter new <name> [--arch clean] [--tests true] [--dry-run]");
                 return;
             }
 
             var archKey = context.Options.GetValueOrDefault("--arch", "clean");
             var tests = context.Options.GetValueOrDefault("--tests", "false") == "true";
+            var isDryRun = context.Flags.Contains("--dry-run");
 
             if (!TryParseArchitecture(archKey, out var architecture))
             {
@@ -34,12 +36,14 @@ namespace Archneter.Cli.Commands
                 GenerateTests = tests
             };
 
-            var factory = new GeneratorFactory();
+            ICliService cli = isDryRun ? new DryRunCliService() : new DotnetCliService();
+            var factory = new GeneratorFactory(cli);
             var generator = factory.Get(options.Architecture);
 
             await generator.GenerateAsync(options);
 
-            Console.WriteLine($"Project '{options.ProjectName}' created successfully.");
+            if (!isDryRun)
+                Console.WriteLine($"Project '{options.ProjectName}' created successfully.");
         }
 
         private static bool TryParseArchitecture(string key, out ArchitectureType architecture)

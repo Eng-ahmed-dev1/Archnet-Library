@@ -6,6 +6,13 @@ namespace Archneter.Generators.CleanArchitecture
 {
     public class CleanArchitectureGenerator : IArchitectureGenerator
     {
+        private readonly ICliService _cli;
+
+        public CleanArchitectureGenerator(ICliService cli)
+        {
+            _cli = cli;
+        }
+
         public async Task GenerateAsync(ProjectOptions options)
         {
             var name = options.ProjectName;
@@ -13,72 +20,137 @@ namespace Archneter.Generators.CleanArchitecture
             var srcPath = Path.Combine(rootPath, "src");
             var testsPath = Path.Combine(rootPath, "tests");
 
-            Directory.CreateDirectory(rootPath);
-            Directory.CreateDirectory(srcPath);
+            var isDryRun = _cli is DryRunCliService dryRun;
+            if (_cli is DryRunCliService dryRunService)
+                dryRunService.PrintHeader(name, "Clean Architecture");
 
-            await DotnetCliService.RunAsync($"new sln -n {name}", rootPath);
+            if (!isDryRun)
+            {
+                Directory.CreateDirectory(rootPath);
+                Directory.CreateDirectory(srcPath);
+            }
 
-            var slnPath = Directory.GetFiles(rootPath, $"{name}.sln*").FirstOrDefault()
-                ?? throw new Exception($"Solution file not found after creation in {rootPath}");
+            await _cli.RunAsync($"new sln -n {name}", rootPath);
+
+            var slnPath = isDryRun
+                ? Path.Combine(rootPath, $"{name}.sln")
+                : Directory.GetFiles(rootPath, $"{name}.sln*").FirstOrDefault()
+                    ?? throw new Exception($"Solution file not found after creation in {rootPath}");
 
             var domainPath = Path.Combine(srcPath, $"{name}.Domain");
             var applicationPath = Path.Combine(srcPath, $"{name}.Application");
             var infrastructurePath = Path.Combine(srcPath, $"{name}.Infrastructure");
             var apiPath = Path.Combine(srcPath, $"{name}.Api");
 
-            await DotnetCliService.CreateProjectAsync("classlib", $"{name}.Domain", domainPath);
-            await DotnetCliService.CreateProjectAsync("classlib", $"{name}.Application", applicationPath);
-            await DotnetCliService.CreateProjectAsync("classlib", $"{name}.Infrastructure", infrastructurePath);
-            await DotnetCliService.CreateProjectAsync("webapi", $"{name}.Api", apiPath);
+            await _cli.CreateProjectAsync("classlib", $"{name}.Domain", domainPath);
+            await _cli.CreateProjectAsync("classlib", $"{name}.Application", applicationPath);
+            await _cli.CreateProjectAsync("classlib", $"{name}.Infrastructure", infrastructurePath);
+            await _cli.CreateProjectAsync("webapi", $"{name}.Api", apiPath);
 
-            await DotnetCliService.AddToSolutionAsync(slnPath, $"{domainPath}/{name}.Domain.csproj");
-            await DotnetCliService.AddToSolutionAsync(slnPath, $"{applicationPath}/{name}.Application.csproj");
-            await DotnetCliService.AddToSolutionAsync(slnPath, $"{infrastructurePath}/{name}.Infrastructure.csproj");
-            await DotnetCliService.AddToSolutionAsync(slnPath, $"{apiPath}/{name}.Api.csproj");
+            await _cli.AddToSolutionAsync(slnPath, $"{domainPath}/{name}.Domain.csproj");
+            await _cli.AddToSolutionAsync(slnPath, $"{applicationPath}/{name}.Application.csproj");
+            await _cli.AddToSolutionAsync(slnPath, $"{infrastructurePath}/{name}.Infrastructure.csproj");
+            await _cli.AddToSolutionAsync(slnPath, $"{apiPath}/{name}.Api.csproj");
 
-            await DotnetCliService.AddReferenceAsync(
+            await _cli.AddReferenceAsync(
                 $"{applicationPath}/{name}.Application.csproj",
                 $"{domainPath}/{name}.Domain.csproj");
 
-            await DotnetCliService.AddReferenceAsync(
+            await _cli.AddReferenceAsync(
                 $"{infrastructurePath}/{name}.Infrastructure.csproj",
                 $"{applicationPath}/{name}.Application.csproj");
 
-            await DotnetCliService.AddReferenceAsync(
+            await _cli.AddReferenceAsync(
                 $"{apiPath}/{name}.Api.csproj",
                 $"{applicationPath}/{name}.Application.csproj");
 
-            await DotnetCliService.AddReferenceAsync(
+            await _cli.AddReferenceAsync(
                 $"{apiPath}/{name}.Api.csproj",
                 $"{infrastructurePath}/{name}.Infrastructure.csproj");
 
-            Directory.CreateDirectory(Path.Combine(applicationPath, "Common"));
-            Directory.CreateDirectory(Path.Combine(applicationPath, "DependencyInjection"));
-            Directory.CreateDirectory(Path.Combine(applicationPath, "DTOs"));
-            Directory.CreateDirectory(Path.Combine(applicationPath, "UseCases"));
+            if (!isDryRun)
+            {
+                CreateDirectories(
+                    // Domain
+                    Path.Combine(domainPath, "Common"),
+                    Path.Combine(domainPath, "Entities"),
+                    Path.Combine(domainPath, "Enums"),
+                    Path.Combine(domainPath, "Events"),
+                    Path.Combine(domainPath, "Exceptions"),
+                    Path.Combine(domainPath, "ValueObjects"),
+                    Path.Combine(domainPath, "Constants"),
+
+                    // Application
+                    Path.Combine(applicationPath, "Common", "Behaviors"),
+                    Path.Combine(applicationPath, "Common", "Exceptions"),
+                    Path.Combine(applicationPath, "Common", "Interfaces"),
+                    Path.Combine(applicationPath, "Common", "Mappings"),
+                    Path.Combine(applicationPath, "Common", "Models"),
+                    Path.Combine(applicationPath, "DependencyInjection"),
+                    Path.Combine(applicationPath, "Features"),
+
+                    // Infrastructure
+                    Path.Combine(infrastructurePath, "Persistence", "Configurations"),
+                    Path.Combine(infrastructurePath, "Persistence", "Repositories"),
+                    Path.Combine(infrastructurePath, "Persistence", "Migrations"),
+                    Path.Combine(infrastructurePath, "Persistence", "Interceptors"),
+                    Path.Combine(infrastructurePath, "Services"),
+                    Path.Combine(infrastructurePath, "Identity"),
+                    Path.Combine(infrastructurePath, "ExternalServices"),
+                    Path.Combine(infrastructurePath, "DependencyInjection"),
+
+                    // Api
+                    Path.Combine(apiPath, "Controllers"),
+                    Path.Combine(apiPath, "Middlewares"),
+                    Path.Combine(apiPath, "Extensions"),
+                    Path.Combine(apiPath, "Filters"),
+                    Path.Combine(apiPath, "Configurations"),
+                    Path.Combine(apiPath, "Properties")
+                );
+            }
 
             if (options.GenerateTests)
             {
-                Directory.CreateDirectory(testsPath);
+                if (!isDryRun)
+                    Directory.CreateDirectory(testsPath);
 
-                // Unit Tests
                 var unitTestsPath = Path.Combine(testsPath, $"{name}.Unit.Tests");
-                await DotnetCliService.CreateProjectAsync("xunit", $"{name}.Unit.Tests", unitTestsPath);
-                await DotnetCliService.AddToSolutionAsync(slnPath, $"{unitTestsPath}/{name}.Unit.Tests.csproj");
-                await DotnetCliService.AddReferenceAsync(
+                await _cli.CreateProjectAsync("xunit", $"{name}.Unit.Tests", unitTestsPath);
+                await _cli.AddToSolutionAsync(slnPath, $"{unitTestsPath}/{name}.Unit.Tests.csproj");
+                await _cli.AddReferenceAsync(
                     $"{unitTestsPath}/{name}.Unit.Tests.csproj",
                     $"{domainPath}/{name}.Domain.csproj");
 
-                // Integration Tests
+                if (!isDryRun)
+                    CreateDirectories(
+                        Path.Combine(unitTestsPath, "Domain"),
+                        Path.Combine(unitTestsPath, "Application")
+                    );
+
                 var integrationTestsPath = Path.Combine(testsPath, $"{name}.Integration.Tests");
-                await DotnetCliService.CreateProjectAsync("xunit", $"{name}.Integration.Tests", integrationTestsPath);
-                await DotnetCliService.AddToSolutionAsync(slnPath, $"{integrationTestsPath}/{name}.Integration.Tests.csproj");
-                await DotnetCliService.AddReferenceAsync(
+                await _cli.CreateProjectAsync("xunit", $"{name}.Integration.Tests", integrationTestsPath);
+                await _cli.AddToSolutionAsync(slnPath, $"{integrationTestsPath}/{name}.Integration.Tests.csproj");
+                await _cli.AddReferenceAsync(
                     $"{integrationTestsPath}/{name}.Integration.Tests.csproj",
                     $"{apiPath}/{name}.Api.csproj");
+
+                if (!isDryRun)
+                    CreateDirectories(
+                        Path.Combine(integrationTestsPath, "Infrastructure"),
+                        Path.Combine(integrationTestsPath, "Api")
+                    );
             }
 
-            Console.WriteLine($"Clean Architecture solution '{name}' generated successfully.");
+            if (_cli is DryRunCliService footer)
+                footer.PrintFooter();
+            else
+                Console.WriteLine($"Clean Architecture solution '{name}' generated successfully.");
+        }
+
+        private static void CreateDirectories(params string[] directories)
+        {
+            foreach (var directory in directories)
+                Directory.CreateDirectory(directory);
         }
     }
 }
