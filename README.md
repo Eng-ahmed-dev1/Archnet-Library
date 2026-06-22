@@ -8,7 +8,7 @@ Archneter is a lightweight, extensible command-line tool (CLI) designed to autom
 
 The codebase is organized into three primary projects grouped under a single .NET solution (`archneter.slnx`):
 
-```
+```text
 Archneter/
 ├── Archneter.Core/          # Domain abstractions, models, and shared enums
 ├── Archneter.Generators/    # Architecture-specific code generation logic
@@ -23,15 +23,16 @@ Archneter/
 This project defines the core abstractions, shared models, and configurations used across the solution. It does not depend on any other projects.
 
 *   **`Abstractions/`**
-    *   **[`IArchitectureGenerator.cs`](./Archneter.Core/Abstractions/IArchitectureGenerator.cs)**: Defines the primary interface for all architecture generators. It exposes `Task GenerateAsync(ProjectOptions options)`.
+    *   **`IArchitectureGenerator.cs`**: Defines the primary interface for all architecture generators. It exposes `Task GenerateAsync(ProjectOptions options)`.
 *   **`Enums/`**
-    *   **[`ArchitectureType.cs`](./Archneter.Core/Enums/ArchitectureType.cs)**: An enum representing the supported architecture styles:
+    *   **`ArchitectureType.cs`**: An enum representing the supported architecture styles:
         *   `CleanArchitecture` (1)
         *   `VerticalSlice` (2)
         *   `ModularMonolith` (3)
         *   `Microservices` (4)
+        *   `NTier` (5)
 *   **`Models/`**
-    *   **[`ProjectOptions.cs`](./Archneter.Core/Models/ProjectOptions.cs)**: Data class holding configuration parameters specified by the user (e.g., `ProjectName`, selected `ArchitectureType`, and a flag to `GenerateTests`).
+    *   **`ProjectOptions.cs`**: Data class holding configuration parameters specified by the user (e.g., `ProjectName`, `ArchitectureType`, `GenerateTests`, and `ServiceNames`).
 
 ---
 
@@ -39,71 +40,50 @@ This project defines the core abstractions, shared models, and configurations us
 This project implements the architecture generators. It depends on `Archneter.Core` and uses the underlying system's `dotnet` CLI to perform project bootstrapping.
 
 *   **`CleanArchitecture/`**
-    *   **[`CleanArchitectureGenerator.cs`](./Archneter.Generators/CleanArchitecture/CleanArchitectureGenerator.cs)**: The concrete implementation of `IArchitectureGenerator` for Clean Architecture. Scaffolds a 4-layer architecture:
-        *   `.Domain` (Class Library)
-        *   `.Application` (Class Library, depends on `.Domain`)
-        *   `.Infrastructure` (Class Library, depends on `.Application`)
-        *   `.Api` (Web API, depends on `.Application` and `.Infrastructure`)
-        *   *Optional:* Scaffolds `.Unit.Tests` and `.Integration.Tests` (xUnit projects) if `GenerateTests` is set to `true`.
+    *   **`CleanArchitectureGenerator.cs`**: Scaffolds a 4-layer architecture (`.Domain`, `.Application`, `.Infrastructure`, `.Api`).
+*   **`Microservices/`**
+    *   **`MicroservicesArchitectureGenerator.cs`**: Scaffolds an API Gateway, Shared Contracts, and multiple microservices. Each microservice gets its own internal Clean Architecture layers.
+*   **`ModularMonolith/`**
+    *   **`ModularMonolithArchitectureGenerator.cs`**: Scaffolds a single Host API, a Shared project, and separates features into independent module class libraries.
+*   **`VerticalSlice/`**
+    *   **`VerticalSliceArchitectureGenerator.cs`**: Scaffolds a highly cohesive single Web API project with feature-sliced folders (`Commands`, `Queries`, `DTOs`, `Endpoints`).
+*   **`N-Tier/`**
+    *   **`NTierArchitectureGenerator.cs`**: Scaffolds a traditional 3-tier architecture (`.DAL`, `.BLL`, `.PL`).
 *   **`Infrastructure/`**
-    *   **[`DotnetCliService.cs`](./Archneter.Generators/Infrastructure/DotnetCliService.cs)**: A utility service wrapper that runs command-line processes. It provides helper methods to interact with the installed .NET SDK:
-        *   `RunAsync()`: Spawns and manages a `dotnet` process.
-        *   `CreateProjectAsync()`: Executes `dotnet new <template>`.
-        *   `AddToSolutionAsync()`: Executes `dotnet sln <sln> add <project>`.
-        *   `AddReferenceAsync()`: Executes `dotnet add <project> reference <dependency>`.
-*   **Placeholder Directories** (for future implementations):
-    *   `Microservices/`
-    *   `ModularMonolith/`
-    *   `VerticalSlice/`
+    *   **`DotnetCliService.cs`**: Runs actual `dotnet` CLI commands (`new`, `sln`, `add reference`).
+    *   **`DryRunCliService.cs`**: Simulates the CLI execution for the `--dry-run` flag, printing the execution plan without modifying the disk.
 
 ---
 
 ### 3. [Archneter.Cli](./Archneter.Cli)
 The entry point of the CLI application. It handles parsing command-line parameters, matching them to commands, and executing actions.
 
-*   **[`Program.cs`](./Archneter.Cli/Program.cs)**: The entry point. Discovers and runs commands by querying the `CommandRegistry` and using the `CommandDispatcher`.
-*   **`Attributes/`**
-    *   **[`CommandAttribute.cs`](./Archneter.Cli/Attributes/CommandAttribute.cs)**: Specifies the command keyword (e.g., `[Command("new")]`).
-    *   **[`DescriptionAttribute.cs`](./Archneter.Cli/Attributes/DescriptionAttribute.cs)**: Provides a short description of the command.
-    *   **[`CommandSyntaxAttribute.cs`](./Archneter.Cli/Attributes/CommandSyntaxAttribute.cs)**: Defines the execution syntax for help generation.
-    *   **[`CommandOptionAttribute.cs`](./Archneter.Cli/Attributes/CommandOptionAttribute.cs)**: Declares option templates, descriptions, and detail lists.
-    *   **[`CommandExampleAttribute.cs`](./Archneter.Cli/Attributes/CommandExampleAttribute.cs)**: Provides concrete examples of command usage.
 *   **`Commands/`**
-    *   **[`IArchCommand.cs`](./Archneter.Cli/Commands/IArchCommand.cs)**: Interface defining standard executable commands with `Task ExecuteAsync(CommandContext context)`.
-    *   **[`NewCommand.cs`](./Archneter.Cli/Commands/NewCommand.cs)**: Implements the `new` command. Parses the project name, selected architecture flags, and test flags, then fires the appropriate generator from `GeneratorFactory`.
-    *   **[`HelpCommand.cs`](./Archneter.Cli/Commands/HelpCommand.cs)**: Displays dynamic and formatted usage instructions, command lists, options, and examples retrieved from the registry.
-*   **`Models/`**
-    *   **[`CommandContext.cs`](./Archneter.Cli/Models/CommandContext.cs)**: Contains parsed arguments, flags, and key-value options for execution context.
-    *   **[`CommandDescriptor.cs`](./Archneter.Cli/Models/CommandDescriptor.cs)**: Couples a command name with its `IArchCommand` instance.
-    *   **[`OptionMetadata.cs`](./Archneter.Cli/Models/OptionMetadata.cs)**: Holds structural metadata of a command option.
-    *   **[`CommandMetadata.cs`](./Archneter.Cli/Models/CommandMetadata.cs)**: Holds aggregated command metadata including syntax, options, and examples.
+    *   **`NewCommand.cs`**: Implements the `new` command. Parses the project name, selected architecture flags, and feature/module flags. Contains an interactive wizard fallback.
+    *   **`HelpCommand.cs`**: Displays dynamic and formatted usage instructions.
 *   **`Parsing/`**
-    *   **[`ArgumentParser.cs`](./Archneter.Cli/Parsing/ArgumentParser.cs)**: Simple parser that maps console arguments (e.g., command, project name, key-value option pairs like `--arch clean`) into a structured `CommandContext`.
+    *   **`ArgumentParser.cs`**: Maps console arguments into a structured `CommandContext`.
 *   **`Services/`**
-    *   **[`CommandRegistry.cs`](./Archneter.Cli/Services/CommandRegistry.cs)**: Discovers and manages CLI commands and their metadata dynamically using reflection.
-    *   **[`CliConsoleWriter.cs`](./Archneter.Cli/Services/CliConsoleWriter.cs)**: A simple formatting utility to write aligned headers, columns, and list items to the console.
-    *   **[`CommandDispatcher.cs`](./Archneter.Cli/Services/CommandDispatcher.cs)**: Selects and runs the correct command depending on parsed arguments.
-    *   **[`GeneratorFactory.cs`](./Archneter.Cli/Services/GeneratorFactory.cs)**: Resolves the appropriate implementation of `IArchitectureGenerator` based on the specified `ArchitectureType`.
-    *   **[`ProjectWizardService.cs`](./Archneter.Cli/Services/ProjectWizardService.cs)**: An interactive command-line wizard (currently placeholder) to prompt the user step-by-step for project generation inputs.
+    *   **`CommandRegistry.cs`**: Discovers and manages CLI commands dynamically.
+    *   **`GeneratorFactory.cs`**: Resolves the appropriate implementation of `IArchitectureGenerator` based on the specified architecture type and dry-run state.
 
 ---
 
 ## How to Get Started
 
 ### Prerequisites
-Make sure you have the following installed on your machine:
-*   [.NET 8.0 SDK](https://dotnet.microsoft.com/download) (or higher)
+*   [.NET SDK](https://dotnet.microsoft.com/download)
 
 ### Build the Tool
 To build the solution, run:
 ```bash
-dotnet build archneter.slnx
+dotnet build
 ```
 
 ### Run the CLI
 You can execute the CLI project directly using `dotnet run`:
 ```bash
-dotnet run --project Archneter.Cli/Archneter.Cli.csproj -- [command] [arguments] [options]
+dotnet run --project Archneter.Cli/Archneter.Cli.csproj -- [command] [options]
 ```
 
 ---
@@ -120,22 +100,53 @@ dotnet run --project Archneter.Cli/Archneter.Cli.csproj -- help
 Use the `new` command to generate a template solution.
 
 ```bash
-dotnet run --project Archneter.Cli/Archneter.Cli.csproj -- new <ProjectName> [options]
+archneter new <ProjectName> --arch <type> [options]
 ```
+*(Assuming you alias the CLI to `archneter`, otherwise use `dotnet run --project Archneter.Cli/Archneter.Cli.csproj -- new ...`)*
 
 #### Options:
-*   `--arch <type>`: Specifies the architecture template. Supported value:
+*   `--arch <type>`: Specifies the architecture template. Supported values:
     *   `clean` (Clean Architecture - Default)
+    *   `microservices` (Microservices)
+    *   `modularmonolith` (Modular Monolith)
+    *   `verticalslice` (Vertical Slice)
+    *   `n-tier` (N-Tier)
+*   `--services <names>`: Comma-separated service names *(microservices only)*
+*   `--modules <names>`: Comma-separated module names *(modular monolith only)*
+*   `--features <names>`: Comma-separated feature names *(vertical slice only)*
 *   `--tests <true|false>`: Scaffolds accompanying unit and integration test projects. (Default: `false`)
+*   `--dry-run`: Previews the generated structure in the terminal without creating any files on disk.
+
+> **Note:** If you forget to provide the `--services`, `--modules`, or `--features` flags for their respective architectures, Archneter will trigger a smart **interactive wizard** asking you for the count and names dynamically!
 
 #### Examples:
 
 1.  **Generate a standard Clean Architecture solution:**
     ```bash
-    dotnet run --project Archneter.Cli/Archneter.Cli.csproj -- new InventorySystem --arch clean
+    archneter new CleanApp --arch clean --tests true
     ```
 
-2.  **Generate a Clean Architecture solution with Unit and Integration tests:**
+2.  **Generate a traditional N-Tier architecture:**
     ```bash
-    dotnet run --project Archneter.Cli/Archneter.Cli.csproj -- new ECommerceSystem --arch clean --tests true
+    archneter new LegacyApp --arch n-tier --tests true
+    ```
+
+3.  **Generate a Microservices architecture with specific services:**
+    ```bash
+    archneter new DistributedApp --arch microservices --services Order,Product,Identity --tests true
+    ```
+
+4.  **Generate a Modular Monolith with specific modules:**
+    ```bash
+    archneter new MonolithApp --arch modularmonolith --modules Sales,Catalog --tests true
+    ```
+
+5.  **Generate a Vertical Slice architecture with specific features:**
+    ```bash
+    archneter new SliceApp --arch verticalslice --features Orders,Cart --tests true
+    ```
+
+6.  **Preview execution using Dry-Run:**
+    ```bash
+    archneter new FullDemoApp --arch n-tier --tests true --dry-run
     ```

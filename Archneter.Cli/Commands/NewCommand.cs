@@ -3,70 +3,161 @@ using Archneter.Cli.Models;
 using Archneter.Cli.Services;
 using Archneter.Core.Enums;
 using Archneter.Core.Models;
-using Archneter.Generators.Infrastructure;
 
-namespace Archneter.Cli.Commands
+namespace Archneter.Cli.Commands;
+
+[Command("new")]
+[Description("Scaffold a new architecture solution")]
+[CommandSyntax("new <ProjectName> --arch <type> [--services <S1,S2,...>] [--modules <M1,M2,...>] [--features <F1,F2,...>] [--tests <true|false>] [--dry-run]")]
+[CommandOption("--arch <type>",
+    "Architecture template to generate",
+    "  clean            → Clean Architecture (default)",
+    "  microservices    → Microservices",
+    "  n-tier           → N-Tier (PL → BLL → DAL)",
+    "  verticalslice    → Vertical Slice",
+    "  modularmonolith  → Modular Monolith")]
+[CommandOption("--services <names>",
+    "Comma-separated service names (microservices only)",
+    "  e.g. Order,Product,Identity")]
+[CommandOption("--modules <names>",
+    "Comma-separated module names (modular monolith only)",
+    "  e.g. Sales,Catalog,Inventory")]
+[CommandOption("--features <names>",
+    "Comma-separated feature names (vertical slice only)",
+    "  e.g. Orders,Catalog,Cart")]
+[CommandOption("--tests <true|false>",
+    "Scaffold test projects (default: false)")]
+[CommandOption("--dry-run",
+    "Preview the generated structure without writing any files",
+    "  no real dotnet commands run, nothing is created on disk")]
+[CommandExample("archneter new CleanApp --arch clean --tests true")]
+[CommandExample("archneter new LegacyApp --arch n-tier --tests true")]
+[CommandExample("archneter new DistributedApp --arch microservices --services Order,Product,Identity --tests true")]
+[CommandExample("archneter new MonolithApp --arch modularmonolith --modules Sales,Catalog --tests true")]
+[CommandExample("archneter new SliceApp --arch verticalslice --features Orders,Cart --tests true")]
+public sealed class NewCommand : IArchCommand
 {
-    [Command("new")]
-    [Description("Create a new architecture project")]
-    [CommandSyntax("new <name> [options]")]
-    [CommandOption("--arch <type>", "Architecture type (default: clean)", "clean                      Clean Architecture", "microservices              Microservices")]
-    [CommandOption("--tests <true|false>", "Generate test projects (default: false)")]
-    [CommandOption("--dry-run", "Preview commands without creating any files")]
-    [CommandExample("archneter new MyProject --arch clean")]
-    [CommandExample("archneter new MyProject --arch clean --tests true")]
-    [CommandExample("archneter new MyProject --arch microservices --tests true")]
-    [CommandExample("archneter new MyProject --arch clean --dry-run")]
-    [CommandExample("archneter new MyProject --arch clean --tests true --dry-run")]
-    public class NewCommand : IArchCommand
+    public async Task ExecuteAsync(CommandContext context)
     {
-        public async Task ExecuteAsync(CommandContext context)
+        // ── Project name ──────────────────────────────────────────────────────────
+        var projectName = context.ProjectName;
+
+        if (string.IsNullOrWhiteSpace(projectName))
         {
-            if (string.IsNullOrWhiteSpace(context.ProjectName))
-            {
-                Console.WriteLine("Error: project name is required. Usage: archneter new <name> [--arch clean] [--tests true] [--dry-run]");
-                return;
-            }
-
-            var archKey = context.Options.GetValueOrDefault("--arch", "clean");
-            var tests = context.Options.GetValueOrDefault("--tests", "false") == "true";
-            var isDryRun = context.Flags.Contains("--dry-run");
-
-            if (!TryParseArchitecture(archKey, out var architecture))
-            {
-                Console.WriteLine($"Error: unknown architecture '{archKey}'. Supported: clean");
-                return;
-            }
-
-            var options = new ProjectOptions
-            {
-                ProjectName = context.ProjectName,
-                Architecture = architecture,
-                GenerateTests = tests
-            };
-
-            ICliService cli = isDryRun ? new DryRunCliService() : new DotnetCliService();
-            var factory = new GeneratorFactory(cli);
-            var generator = factory.Get(options.Architecture);
-
-            await generator.GenerateAsync(options);
-
-            if (!isDryRun)
-                Console.WriteLine($"Project '{options.ProjectName}' created successfully.");
+            Console.WriteLine("Error: project name is required.");
+            Console.WriteLine("Usage: archneter new <ProjectName> --arch <type>");
+            return;
         }
 
-        private static bool TryParseArchitecture(string key, out ArchitectureType architecture)
+        // ── Architecture type ─────────────────────────────────────────────────────
+        var archFlag = context.Options.GetValueOrDefault("--arch", "clean").ToLowerInvariant();
+
+        var archType = archFlag switch
         {
-            architecture = key.ToLowerInvariant() switch
+            "clean" => ArchitectureType.CleanArchitecture,
+            "microservices" => ArchitectureType.Microservices,
+            "verticalslice" => ArchitectureType.VerticalSlice,
+            "modularmonolith" => ArchitectureType.ModularMonolith,
+            "n-tier" => ArchitectureType.NTier,
+            "ntier" => ArchitectureType.NTier,
+            _ => ArchitectureType.CleanArchitecture
+        };
+
+        // ── Tests flag ────────────────────────────────────────────────────────────
+        var testsFlag = context.Options.GetValueOrDefault("--tests", "false");
+        var generateTests = testsFlag.Equals("true", StringComparison.OrdinalIgnoreCase);
+
+        // ── Dry-run flag ──────────────────────────────────────────────────────────
+        var isDryRun = context.Flags.Contains("--dry-run") || context.Options.ContainsKey("--dry-run");
+
+        // ── Service names (microservices only) ────────────────────────────────────
+        var serviceNames = new List<string>();
+
+        if (archType == ArchitectureType.Microservices || archType == ArchitectureType.ModularMonolith || archType == ArchitectureType.VerticalSlice)
+        {
+            var noun = archType switch
             {
-                "clean" => ArchitectureType.CleanArchitecture,
-                "vsa" or "vertical-slice" => ArchitectureType.VerticalSlice,
-                "modular" => ArchitectureType.ModularMonolith,
-                "microservices" => ArchitectureType.Microservices,
-                _ => default
+                ArchitectureType.VerticalSlice => "feature",
+                ArchitectureType.ModularMonolith => "module",
+                _ => "service"
+            };
+            var nounPlural = archType switch
+            {
+                ArchitectureType.VerticalSlice => "features",
+                ArchitectureType.ModularMonolith => "modules",
+                _ => "services"
             };
 
-            return key.ToLowerInvariant() is "clean" or "vsa" or "vertical-slice" or "modular" or "microservices";
+            var expectedFlag = archType switch
+            {
+                ArchitectureType.VerticalSlice => "--features",
+                ArchitectureType.ModularMonolith => "--modules",
+                _ => "--services"
+            };
+
+            var hasRaw = false;
+            var rawString = string.Empty;
+
+            if (context.Options.TryGetValue(expectedFlag, out var flagRaw))
+            {
+                hasRaw = true; rawString = flagRaw;
+            }
+            else if (context.Options.TryGetValue("--features", out var featRaw))
+            {
+                hasRaw = true; rawString = featRaw;
+            }
+            else if (context.Options.TryGetValue("--modules", out var modRaw))
+            {
+                hasRaw = true; rawString = modRaw;
+            }
+            else if (context.Options.TryGetValue("--services", out var svcRaw))
+            {
+                hasRaw = true; rawString = svcRaw;
+            }
+
+            if (hasRaw && !string.IsNullOrWhiteSpace(rawString))
+            {
+                // Option A — inline
+                serviceNames = rawString
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .ToList();
+            }
+            else
+            {
+                // Option B — interactive wizard
+                Console.Write($"  How many {nounPlural}? (e.g. 3): ");
+                if (!int.TryParse(Console.ReadLine()?.Trim(), out var count) || count <= 0)
+                {
+                    Console.WriteLine($"Error: invalid number of {nounPlural}.");
+                    return;
+                }
+
+                for (int i = 1; i <= count; i++)
+                {
+                    Console.Write($"  {char.ToUpper(noun[0]) + noun.Substring(1)} {i} name: ");
+                    var svcName = Console.ReadLine()?.Trim() ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(svcName))
+                        serviceNames.Add(svcName);
+                }
+            }
+
+            if (serviceNames.Count == 0)
+            {
+                Console.WriteLine($"Error: at least one {noun} name is required.");
+                return;
+            }
         }
+
+        // ── Build options & run generator ─────────────────────────────────────────
+        var options = new ProjectOptions
+        {
+            ProjectName = projectName,
+            Architecture = archType,
+            GenerateTests = generateTests,
+            ServiceNames = serviceNames
+        };
+
+        var generator = GeneratorFactory.Create(archType, isDryRun);
+        await generator.GenerateAsync(options);
     }
 }
