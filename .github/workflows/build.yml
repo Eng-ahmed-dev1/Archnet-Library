@@ -1,37 +1,39 @@
-name: Build and Publish to NuGet
+name: Publish NuGet Package
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch: # Allows manual trigger from GitHub UI
-
-permissions:
-  id-token: write # Required for NuGet OIDC Trusted Publisher
-  contents: read  # Required for checkout
+    tags:
+      - 'v*'
 
 jobs:
-  build_and_publish:
+  publish:
     runs-on: ubuntu-latest
-    
+    permissions:
+      id-token: write  
+      contents: read
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '10.0.x'
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
 
-    - name: Restore dependencies
-      run: dotnet restore Archneter.Cli/Archneter.Cli.csproj
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build Archneter.Cli/Archneter.Cli.csproj -c Release --no-restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
 
-    - name: Pack
-      run: dotnet pack Archneter.Cli/Archneter.Cli.csproj -c Release --no-build
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output ./nupkg
 
-    - name: Publish to NuGet
-      # The skip-duplicate flag prevents failing if this version is already published
-      run: dotnet nuget push Archneter.Cli/nupkg/*.nupkg --source https://api.nuget.org/v3/index.json --skip-duplicate
+      
+      - name: Push to NuGet (Trusted Publishing)
+        uses: nuget/setup-nuget@v2
+
+      - name: Publish
+        run: dotnet nuget push ./nupkg/*.nupkg \
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate
