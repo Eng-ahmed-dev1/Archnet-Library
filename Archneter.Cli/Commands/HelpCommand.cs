@@ -2,47 +2,40 @@ using System.Reflection;
 using Archnet.Cli.Attributes;
 using Archnet.Cli.Models;
 
-namespace Archnet.Cli.Commands
+namespace Archnet.Cli.Commands;
+
+[Command("help")]
+[Description("Display available commands")]
+public sealed class HelpCommand : IArchCommand
 {
-    [Command("help")]
-    [Description("Display available commands")]
-    public sealed class HelpCommand : IArchCommand
+    public Task ExecuteAsync(CommandContext context)
     {
-        public Task ExecuteAsync(CommandContext context)
-        {
-            Console.WriteLine();
-            Console.WriteLine("Archnet CLI");
-            Console.WriteLine();
-            Console.WriteLine("Available Commands:");
-            Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("Archneter CLI");
+        Console.WriteLine();
+        Console.WriteLine("Usage:");
+        Console.WriteLine("  archneter <command> [options]");
+        Console.WriteLine();
+        Console.WriteLine("Commands:");
+        Console.WriteLine();
+        Console.WriteLine("  help                         Display available commands");
+        Console.WriteLine("  new <name> [options]         Create a new architecture project");
+        Console.WriteLine();
+        Console.WriteLine("Options for 'new':");
+        Console.WriteLine();
+        Console.WriteLine("  --arch <type>                Architecture type (default: clean)");
+        Console.WriteLine("    clean                      Clean Architecture");
+        Console.WriteLine("    microservices              Microservices");
+        Console.WriteLine();
+        Console.WriteLine("  --tests <true|false>         Generate test projects (default: false)");
+        Console.WriteLine();
+        Console.WriteLine("Examples:");
+        Console.WriteLine();
+        Console.WriteLine("  archneter new MyProject --arch clean");
+        Console.WriteLine("  archneter new MyProject --arch clean --tests true");
+        Console.WriteLine("  archneter new MyProject --arch microservices --tests true");
+        Console.WriteLine();
 
-            var commands =
-                Assembly.GetExecutingAssembly()
-                    .GetTypes()
-                    .Where(t =>
-                        typeof(IArchCommand).IsAssignableFrom(t) &&
-                        !t.IsInterface &&
-                        !t.IsAbstract);
-
-            foreach (var command in commands)
-            {
-                var commandAttr =
-                    command.GetCustomAttribute<CommandAttribute>();
-
-                if (commandAttr is null)
-                    continue;
-
-                var descriptionAttr =
-                    command.GetCustomAttribute<DescriptionAttribute>();
-
-                var description =
-                    descriptionAttr?.Text ?? "No description";
-
-                Console.WriteLine(
-                    $"  {commandAttr.Name,-15} {description}");
-            }
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }
