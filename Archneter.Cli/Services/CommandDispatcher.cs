@@ -1,4 +1,5 @@
-
+using Microsoft.Extensions.DependencyInjection;
+using Archneter.Cli.Commands;
 using Archneter.Cli.Models;
 
 namespace Archneter.Cli.Services
@@ -9,14 +10,17 @@ namespace Archneter.Cli.Services
     public sealed class CommandDispatcher
     {
         private readonly IEnumerable<CommandDescriptor> _commands;
+        private readonly IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandDispatcher"/> class.
         /// </summary>
         /// <param name="registry">The registry containing all available commands.</param>
-        public CommandDispatcher(CommandRegistry registry)
+        /// <param name="serviceProvider">The service provider to resolve command instances.</param>
+        public CommandDispatcher(CommandRegistry registry, IServiceProvider serviceProvider)
         {
             _commands = registry.GetCommands();
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -35,7 +39,8 @@ namespace Archneter.Cli.Services
                 return;
             }
 
-            await target.Command.ExecuteAsync(context);
+            var instance = (IArchCommand)_serviceProvider.GetRequiredService(target.CommandType);
+            await instance.ExecuteAsync(context);
         }
     }
 }

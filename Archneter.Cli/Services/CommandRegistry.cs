@@ -33,7 +33,7 @@ namespace Archneter.Cli.Services
         /// </summary>
         public IEnumerable<CommandMetadata> GetCommandsMetadata()
         {
-            return _commands.Select(c => ExtractMetadata(c.Name, c.Command.GetType()));
+            return _commands.Select(c => ExtractMetadata(c.Name, c.CommandType));
         }
 
         private List<CommandDescriptor> DiscoverCommands()
@@ -46,10 +46,7 @@ namespace Archneter.Cli.Services
                     var attr = t.GetCustomAttribute<CommandAttribute>();
                     if (attr is null) return null;
 
-                    var instance = (IArchCommand)_serviceProvider.GetService(t)!;
-                    if (instance is null) return null;
-
-                    return new CommandDescriptor { Name = attr.Name, Command = instance };
+                    return new CommandDescriptor { Name = attr.Name, CommandType = t };
                 })
                 .Where(x => x is not null)
                 .Cast<CommandDescriptor>()

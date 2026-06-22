@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Archneter.Generators")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aecd3546be7679c20717caaf19a6b0900abaaf3d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+87f63bb2b3d409040f276890b79eb4761367844a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Archneter.Generators")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Archneter.Generators")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -30,7 +30,8 @@ var serviceProvider = services.BuildServiceProvider();
 
 // 2. Parse CLI Arguments
 var parser = serviceProvider.GetRequiredService<ArgumentParser>();
-var context = args.Length == 0
+var isHelp = args.Length == 0 || args.Contains("--help") || args.Contains("-h");
+var context = isHelp
     ? new CommandContext { Command = "help" }
     : parser.Parse(args);
 

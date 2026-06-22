@@ -6,6 +6,6 @@ namespace Archneter.Cli.Models
     {
         public string Name { get; set; } = string.Empty;
 
-        public IArchCommand Command { get; set; } = default!;
+        public Type CommandType { get; set; } = default!;
     }
 }
