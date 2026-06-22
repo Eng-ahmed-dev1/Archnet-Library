@@ -1,3 +1,5 @@
+using Archneter.Cli.Commands;
+
 namespace Archneter.Cli.Models
 {
     public class CommandDescriptor

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Archneter.Cli")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.3.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.3+2aeaa6dd27cdafe2ca8b3f7fb622d8b486a3f70f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.3+d6a8469c9f316d5185a71578eec5abf74cb1dbdf")]
 [assembly: System.Reflection.AssemblyProductAttribute("Archneter.Cli")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Archneter.Cli")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.3.0")]

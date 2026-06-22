@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archneter.Core.csproj",
+      "projectUniqueName": "/home/amed/Desktop/Repos/Archneter/Archneter.Core/Archneter.Core.csproj",
       "projectName": "Archneter.Core",
-      "projectPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/Archneter.Core.csproj",
+      "projectPath": "/home/amed/Desktop/Repos/Archneter/Archneter.Core/Archneter.Core.csproj",
       "packagesPath": "/home/amed/.nuget/packages/",
-      "outputPath": "/home/amed/Desktop/Repos/Archnet/Archneter.Core/obj/",
+      "outputPath": "/home/amed/Desktop/Repos/Archneter/Archneter.Core/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/amed/.nuget/NuGet/NuGet.Config"
