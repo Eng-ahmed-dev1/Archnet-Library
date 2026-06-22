@@ -1,44 +1,68 @@
 using Archneter.Cli.Attributes;
 using Archneter.Cli.Models;
+using Archneter.Cli.Services;
 
 namespace Archneter.Cli.Commands;
 
 [Command("help")]
 [Description("Display available commands")]
+[CommandSyntax("help")]
 public sealed class HelpCommand : IArchCommand
 {
     public Task ExecuteAsync(CommandContext context)
     {
-        Console.WriteLine();
-        Console.WriteLine("Archneter CLI");
-        Console.WriteLine();
-        Console.WriteLine("Usage:");
-        Console.WriteLine("  archneter <command> [options]");
-        Console.WriteLine();
-        Console.WriteLine("Commands:");
-        Console.WriteLine();
-        Console.WriteLine("  help                         Display available commands");
-        Console.WriteLine("  new <name> [options]         Create a new architecture project");
-        Console.WriteLine();
-        Console.WriteLine("Options for 'new':");
-        Console.WriteLine();
-        Console.WriteLine("  --arch <type>                Architecture type (default: clean)");
-        Console.WriteLine("    clean                      Clean Architecture");
-        Console.WriteLine("    microservices              Microservices");
-        Console.WriteLine();
-        Console.WriteLine("  --tests <true|false>         Generate test projects (default: false)");
-        Console.WriteLine();
-        Console.WriteLine("  --dry-run                    Preview commands without creating any files");
-        Console.WriteLine();
-        Console.WriteLine("Examples:");
-        Console.WriteLine();
-        Console.WriteLine("  archneter new MyProject --arch clean");
-        Console.WriteLine("  archneter new MyProject --arch clean --tests true");
-        Console.WriteLine("  archneter new MyProject --arch microservices --tests true");
-        Console.WriteLine("  archneter new MyProject --arch clean --dry-run");
-        Console.WriteLine("  archneter new MyProject --arch clean --tests true --dry-run");
-        Console.WriteLine();
+        var writer = new CliConsoleWriter();
+        var metadataList = CommandRegistry.Instance.GetCommandsMetadata().ToList();
 
+        writer.WriteLine();
+        writer.WriteLine("Archneter CLI");
+
+        // USAGE
+        writer.WriteHeader("Usage");
+        writer.WriteRow("archneter <command> [options]", "", indent: 2, col1Width: 0);
+
+        // COMMANDS
+        writer.WriteHeader("Commands");
+        int maxSyntaxLen = metadataList.Max(m => m.Syntax.Length);
+        int commandPadding = Math.Max(maxSyntaxLen + 4, 30);
+
+        foreach (var cmd in metadataList)
+        {
+            writer.WriteRow(cmd.Syntax, cmd.Description, indent: 2, col1Width: commandPadding);
+        }
+
+        // OPTIONS
+        var commandsWithOpts = metadataList.Where(m => m.Options.Any()).ToList();
+        if (commandsWithOpts.Any())
+        {
+            writer.WriteHeader("Options");
+            foreach (var cmd in commandsWithOpts)
+            {
+                writer.WriteLine($"  For '{cmd.Name}':");
+                foreach (var opt in cmd.Options)
+                {
+                    writer.WriteRow(opt.Template, opt.Description, indent: 4, col1Width: 28);
+                    foreach (var detail in opt.Details)
+                    {
+                        writer.WriteLine($"      {detail}");
+                    }
+                    writer.WriteLine();
+                }
+            }
+        }
+
+        // EXAMPLES
+        var examples = metadataList.SelectMany(m => m.Examples).ToList();
+        if (examples.Any())
+        {
+            writer.WriteHeader("Examples");
+            foreach (var ex in examples)
+            {
+                writer.WriteLine($"  {ex}");
+            }
+        }
+
+        writer.WriteLine();
         return Task.CompletedTask;
     }
 }

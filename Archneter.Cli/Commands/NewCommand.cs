@@ -9,6 +9,15 @@ namespace Archneter.Cli.Commands
 {
     [Command("new")]
     [Description("Create a new architecture project")]
+    [CommandSyntax("new <name> [options]")]
+    [CommandOption("--arch <type>", "Architecture type (default: clean)", "clean                      Clean Architecture", "microservices              Microservices")]
+    [CommandOption("--tests <true|false>", "Generate test projects (default: false)")]
+    [CommandOption("--dry-run", "Preview commands without creating any files")]
+    [CommandExample("archneter new MyProject --arch clean")]
+    [CommandExample("archneter new MyProject --arch clean --tests true")]
+    [CommandExample("archneter new MyProject --arch microservices --tests true")]
+    [CommandExample("archneter new MyProject --arch clean --dry-run")]
+    [CommandExample("archneter new MyProject --arch clean --tests true --dry-run")]
     public class NewCommand : IArchCommand
     {
         public async Task ExecuteAsync(CommandContext context)

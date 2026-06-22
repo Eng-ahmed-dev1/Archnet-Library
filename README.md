@@ -61,20 +61,27 @@ This project implements the architecture generators. It depends on `Archneter.Co
 ### 3. [Archneter.Cli](./Archneter.Cli)
 The entry point of the CLI application. It handles parsing command-line parameters, matching them to commands, and executing actions.
 
-*   **[`Program.cs`](./Archneter.Cli/Program.cs)**: The entry point. Uses reflection to discover command classes decorated with `[CommandAttribute]`, instantiates them, and delegates execution via the `CommandDispatcher`.
+*   **[`Program.cs`](./Archneter.Cli/Program.cs)**: The entry point. Discovers and runs commands by querying the `CommandRegistry` and using the `CommandDispatcher`.
 *   **`Attributes/`**
-    *   **[`CommandAttribute.cs`](./Archneter.Cli/Attributes/CommandAttribute.cs)**: Attribute used to specify the command keyword (e.g., `[Command("new")]`).
-    *   **[`DescriptionAttribute.cs`](./Archneter.Cli/Attributes/DescriptionAttribute.cs)**: Attribute providing description text for self-documenting commands.
+    *   **[`CommandAttribute.cs`](./Archneter.Cli/Attributes/CommandAttribute.cs)**: Specifies the command keyword (e.g., `[Command("new")]`).
+    *   **[`DescriptionAttribute.cs`](./Archneter.Cli/Attributes/DescriptionAttribute.cs)**: Provides a short description of the command.
+    *   **[`CommandSyntaxAttribute.cs`](./Archneter.Cli/Attributes/CommandSyntaxAttribute.cs)**: Defines the execution syntax for help generation.
+    *   **[`CommandOptionAttribute.cs`](./Archneter.Cli/Attributes/CommandOptionAttribute.cs)**: Declares option templates, descriptions, and detail lists.
+    *   **[`CommandExampleAttribute.cs`](./Archneter.Cli/Attributes/CommandExampleAttribute.cs)**: Provides concrete examples of command usage.
 *   **`Commands/`**
     *   **[`IArchCommand.cs`](./Archneter.Cli/Commands/IArchCommand.cs)**: Interface defining standard executable commands with `Task ExecuteAsync(CommandContext context)`.
     *   **[`NewCommand.cs`](./Archneter.Cli/Commands/NewCommand.cs)**: Implements the `new` command. Parses the project name, selected architecture flags, and test flags, then fires the appropriate generator from `GeneratorFactory`.
-    *   **[`HelpCommand.cs`](./Archneter.Cli/Commands/HelpCommand.cs)**: Displays instructions on how to use the CLI, along with available options and examples.
+    *   **[`HelpCommand.cs`](./Archneter.Cli/Commands/HelpCommand.cs)**: Displays dynamic and formatted usage instructions, command lists, options, and examples retrieved from the registry.
 *   **`Models/`**
     *   **[`CommandContext.cs`](./Archneter.Cli/Models/CommandContext.cs)**: Contains parsed arguments, flags, and key-value options for execution context.
     *   **[`CommandDescriptor.cs`](./Archneter.Cli/Models/CommandDescriptor.cs)**: Couples a command name with its `IArchCommand` instance.
+    *   **[`OptionMetadata.cs`](./Archneter.Cli/Models/OptionMetadata.cs)**: Holds structural metadata of a command option.
+    *   **[`CommandMetadata.cs`](./Archneter.Cli/Models/CommandMetadata.cs)**: Holds aggregated command metadata including syntax, options, and examples.
 *   **`Parsing/`**
     *   **[`ArgumentParser.cs`](./Archneter.Cli/Parsing/ArgumentParser.cs)**: Simple parser that maps console arguments (e.g., command, project name, key-value option pairs like `--arch clean`) into a structured `CommandContext`.
 *   **`Services/`**
+    *   **[`CommandRegistry.cs`](./Archneter.Cli/Services/CommandRegistry.cs)**: Discovers and manages CLI commands and their metadata dynamically using reflection.
+    *   **[`CliConsoleWriter.cs`](./Archneter.Cli/Services/CliConsoleWriter.cs)**: A simple formatting utility to write aligned headers, columns, and list items to the console.
     *   **[`CommandDispatcher.cs`](./Archneter.Cli/Services/CommandDispatcher.cs)**: Selects and runs the correct command depending on parsed arguments.
     *   **[`GeneratorFactory.cs`](./Archneter.Cli/Services/GeneratorFactory.cs)**: Resolves the appropriate implementation of `IArchitectureGenerator` based on the specified `ArchitectureType`.
     *   **[`ProjectWizardService.cs`](./Archneter.Cli/Services/ProjectWizardService.cs)**: An interactive command-line wizard (currently placeholder) to prompt the user step-by-step for project generation inputs.

@@ -1,27 +1,11 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Archneter.Cli.Attributes;
 using Archneter.Cli.Commands;
 using Archneter.Cli.Models;
 using Archneter.Cli.Parsing;
 using Archneter.Cli.Services;
 
-var commands =
-    Assembly.GetExecutingAssembly()
-        .GetTypes()
-        .Where(t =>
-            typeof(IArchCommand).IsAssignableFrom(t) &&
-            t is { IsClass: true, IsAbstract: false })
-        .Select(t =>
-        {
-            var attr = t.GetCustomAttribute<CommandAttribute>();
-            if (attr is null) return null;
-
-            var instance = (IArchCommand)Activator.CreateInstance(t)!;
-            return new CommandDescriptor { Name = attr.Name, Command = instance };
-        })
-        .Where(x => x is not null)
-        .Cast<CommandDescriptor>()
-        .ToList();
+var commands = CommandRegistry.Instance.GetCommands();
 
 var dispatcher = new CommandDispatcher(commands);
 
@@ -31,6 +15,7 @@ if (args.Length == 0)
     return;
 }
 
-var context = ArgumentParser.Parse(args);
+var parser = new ArgumentParser();
+var context = parser.Parse(args);
 
 await dispatcher.DispatchAsync(context.Command, context);
