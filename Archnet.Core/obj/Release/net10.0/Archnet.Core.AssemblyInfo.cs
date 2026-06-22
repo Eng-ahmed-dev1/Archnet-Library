@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Archnet.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+de082d30621863dcf18b0fa16bf1dee67e0cf57c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7d531d2a61f1aca1c3e469bd176076dd6b455bc8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Archnet.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Archnet.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
