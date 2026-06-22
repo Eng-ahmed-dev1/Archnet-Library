@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Archneter</id>
+    <version>1.1.0</version>
+    <authors>Ahmed</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>icon.png</icon>
+    <readme>README.md</readme>
+    <description>Archneter is an enterprise-grade command-line interface (CLI) designed to accelerate .NET application development. Built on Microsoft.Extensions.DependencyInjection, it automates the scaffolding of highly cohesive, scalable software architectures—including Clean Architecture, Microservices, Modular Monoliths, Vertical Slices, and N-Tier solutions. Empower your engineering teams to establish standardized, production-ready project foundations instantly.</description>
+    <tags>dotnet cli architecture scaffolding clean-architecture microservices modular-monolith vertical-slice n-tier enterprise productivity</tags>
+    <packageTypes>
+      <packageType name="DotnetTool" />
+    </packageTypes>
+    <repository type="git" url="https://github.com/Eng-ahmed-dev1/Archneter-Library" commit="aecd3546be7679c20717caaf19a6b0900abaaf3d" />
+  </metadata>
+  <files>
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/obj/Release/net10.0/DotnetToolSettings.xml" target="tools/net10.0/any/DotnetToolSettings.xml" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Cli" target="tools/net10.0/any/Archnet.Cli" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Cli.deps.json" target="tools/net10.0/any/Archnet.Cli.deps.json" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Cli.dll" target="tools/net10.0/any/Archnet.Cli.dll" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Cli.pdb" target="tools/net10.0/any/Archnet.Cli.pdb" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Cli.runtimeconfig.json" target="tools/net10.0/any/Archnet.Cli.runtimeconfig.json" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Core.dll" target="tools/net10.0/any/Archnet.Core.dll" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Core.pdb" target="tools/net10.0/any/Archnet.Core.pdb" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Generators.dll" target="tools/net10.0/any/Archnet.Generators.dll" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archnet.Generators.pdb" target="tools/net10.0/any/Archnet.Generators.pdb" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archneter.Cli.deps.json" target="tools/net10.0/any/Archneter.Cli.deps.json" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archneter.Cli.dll" target="tools/net10.0/any/Archneter.Cli.dll" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archneter.Cli.pdb" target="tools/net10.0/any/Archneter.Cli.pdb" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archneter.Cli.runtimeconfig.json" target="tools/net10.0/any/Archneter.Cli.runtimeconfig.json" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archneter.Core.dll" target="tools/net10.0/any/Archneter.Core.dll" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archneter.Core.pdb" target="tools/net10.0/any/Archneter.Core.pdb" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archneter.Generators.dll" target="tools/net10.0/any/Archneter.Generators.dll" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Archneter.Generators.pdb" target="tools/net10.0/any/Archneter.Generators.pdb" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Microsoft.Extensions.DependencyInjection.Abstractions.dll" target="tools/net10.0/any/Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/bin/Release/net10.0/publish/Microsoft.Extensions.DependencyInjection.dll" target="tools/net10.0/any/Microsoft.Extensions.DependencyInjection.dll" />
+    <file src="/home/amed/Desktop/Repos/Archneter/README.md" target="/README.md" />
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Cli/icon.png" target="/icon.png" />
+    <file src="/home/amed/Desktop/Repos/Archneter/linkedin_photo.png" target="/linkedin_photo.png" />
+  </files>
+</package>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Archneter.Core</id>
+    <version>1.0.0</version>
+    <authors>Archneter.Core</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="aecd3546be7679c20717caaf19a6b0900abaaf3d" />
+    <dependencies>
+      <group targetFramework="net10.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/home/amed/Desktop/Repos/Archneter/Archneter.Core/bin/Release/net10.0/Archneter.Core.dll" target="lib/net10.0/Archneter.Core.dll" />
+  </files>
+</package>

@@ -22,13 +22,13 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore Archneter.Cli/Archneter.Cli.csproj
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build Archneter.Cli/Archneter.Cli.csproj --configuration Release --no-restore
 
       - name: Pack
-        run: dotnet pack --configuration Release --no-build --output ./nupkg
+        run: dotnet pack Archneter.Cli/Archneter.Cli.csproj --configuration Release --no-build --output ./nupkg
 
       
       - name: Retrieve NuGet API Key (Trusted Publishing)
