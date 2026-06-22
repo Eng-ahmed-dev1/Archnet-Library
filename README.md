@@ -1,4 +1,4 @@
-# 🚀 Archneter Architecture CLI
+#  Archneter Architecture CLI
 
 ![Archneter Logo](Archneter.Cli/icon.png)
 
