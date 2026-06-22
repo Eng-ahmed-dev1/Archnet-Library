@@ -2,46 +2,47 @@ using System.Reflection;
 using Archnet.Cli.Attributes;
 using Archnet.Cli.Models;
 
-namespace Archnet.Cli.Commands;
-
-[Command("help")]
-[Description("Display available commands")]
-public sealed class HelpCommand : IArchCommand
+namespace Archnet.Cli.Commands
 {
-    public Task ExecuteAsync(CommandContext context)
+    [Command("help")]
+    [Description("Display available commands")]
+    public sealed class HelpCommand : IArchCommand
     {
-        Console.WriteLine();
-        Console.WriteLine("Archnet CLI");
-        Console.WriteLine();
-        Console.WriteLine("Available Commands:");
-        Console.WriteLine();
-
-        var commands =
-            Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(t =>
-                    typeof(IArchCommand).IsAssignableFrom(t) &&
-                    !t.IsInterface &&
-                    !t.IsAbstract);
-
-        foreach (var command in commands)
+        public Task ExecuteAsync(CommandContext context)
         {
-            var commandAttr =
-                command.GetCustomAttribute<CommandAttribute>();
+            Console.WriteLine();
+            Console.WriteLine("Archnet CLI");
+            Console.WriteLine();
+            Console.WriteLine("Available Commands:");
+            Console.WriteLine();
 
-            if (commandAttr is null)
-                continue;
+            var commands =
+                Assembly.GetExecutingAssembly()
+                    .GetTypes()
+                    .Where(t =>
+                        typeof(IArchCommand).IsAssignableFrom(t) &&
+                        !t.IsInterface &&
+                        !t.IsAbstract);
 
-            var descriptionAttr =
-                command.GetCustomAttribute<DescriptionAttribute>();
+            foreach (var command in commands)
+            {
+                var commandAttr =
+                    command.GetCustomAttribute<CommandAttribute>();
 
-            var description =
-                descriptionAttr?.Text ?? "No description";
+                if (commandAttr is null)
+                    continue;
 
-            Console.WriteLine(
-                $"  {commandAttr.Name,-15} {description}");
+                var descriptionAttr =
+                    command.GetCustomAttribute<DescriptionAttribute>();
+
+                var description =
+                    descriptionAttr?.Text ?? "No description";
+
+                Console.WriteLine(
+                    $"  {commandAttr.Name,-15} {description}");
+            }
+
+            return Task.CompletedTask;
         }
-
-        return Task.CompletedTask;
     }
 }

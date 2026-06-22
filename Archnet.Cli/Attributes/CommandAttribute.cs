@@ -1,12 +1,13 @@
-namespace Archnet.Cli.Attributes;
-
-[AttributeUsage(AttributeTargets.Class)]
-public class CommandAttribute : Attribute
+namespace Archnet.Cli.Attributes
 {
-    public string Name { get; }
-
-    public CommandAttribute(string name)
+    [AttributeUsage(AttributeTargets.Class)]
+    public class CommandAttribute : Attribute
     {
-        Name = name;
+        public string Name { get; }
+
+        public CommandAttribute(string name)
+        {
+            Name = name;
+        }
     }
 }

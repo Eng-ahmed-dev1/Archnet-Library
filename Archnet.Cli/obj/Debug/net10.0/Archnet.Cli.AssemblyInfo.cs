@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Archnet.Cli")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.1.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.1+de082d30621863dcf18b0fa16bf1dee67e0cf57c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.1+352efef784355356d0a6ead884573adad88b9a0e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Archnet.Cli")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Archnet.Cli")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.1.0")]

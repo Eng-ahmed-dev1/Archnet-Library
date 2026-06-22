@@ -1,12 +1,13 @@
 using Archnet.Core.Enums;
 
-namespace Archnet.Core.Models;
-
-public sealed class ProjectOptions
+namespace Archnet.Core.Models
 {
-    public string ProjectName { get; set; } = string.Empty;
+    public sealed class ProjectOptions
+    {
+        public string ProjectName { get; set; } = string.Empty;
 
-    public ArchitectureType Architecture { get; set; }
+        public ArchitectureType Architecture { get; set; }
 
-    public bool GenerateTests { get; set; }
+        public bool GenerateTests { get; set; }
+    }
 }

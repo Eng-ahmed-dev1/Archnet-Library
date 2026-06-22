@@ -1,33 +1,34 @@
-namespace Archnet.Cli.Parsing;
-
-using Archnet.Cli.Models;
-
-public static class ArgumentParser
+namespace Archnet.Cli.Parsing
 {
-    public static CommandContext Parse(string[] args)
+    using Archnet.Cli.Models;
+
+    public static class ArgumentParser
     {
-        var context = new CommandContext();
-
-        if (args.Length == 0)
-            return context;
-
-        context.Command = args[0];
-
-        if (args.Length > 1)
-            context.ProjectName = args[1];
-
-        for (int i = 2; i < args.Length; i++)
+        public static CommandContext Parse(string[] args)
         {
-            if (args[i].StartsWith("--") && i + 1 < args.Length)
+            var context = new CommandContext();
+
+            if (args.Length == 0)
+                return context;
+
+            context.Command = args[0];
+
+            if (args.Length > 1)
+                context.ProjectName = args[1];
+
+            for (int i = 2; i < args.Length; i++)
             {
-                var key = args[i];
-                var value = args[i + 1];
+                if (args[i].StartsWith("--") && i + 1 < args.Length)
+                {
+                    var key = args[i];
+                    var value = args[i + 1];
 
-                context.Options[key] = value;
-                i++;
+                    context.Options[key] = value;
+                    i++;
+                }
             }
-        }
 
-        return context;
+            return context;
+        }
     }
 }

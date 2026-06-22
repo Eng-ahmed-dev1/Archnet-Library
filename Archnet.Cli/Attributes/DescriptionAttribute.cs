@@ -1,12 +1,13 @@
-namespace Archnet.Cli.Attributes;
-
-[AttributeUsage(AttributeTargets.Class)]
-public sealed class DescriptionAttribute : Attribute
+namespace Archnet.Cli.Attributes
 {
-    public string Text { get; }
-
-    public DescriptionAttribute(string text)
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class DescriptionAttribute : Attribute
     {
-        Text = text;
+        public string Text { get; }
+
+        public DescriptionAttribute(string text)
+        {
+            Text = text;
+        }
     }
 }

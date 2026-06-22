@@ -1,8 +1,9 @@
 using Archnet.Cli.Models;
 
-namespace Archnet.Cli.Commands;
-
-public interface IArchCommand
+namespace Archnet.Cli.Commands
 {
-    Task ExecuteAsync(CommandContext context);
+    public interface IArchCommand
+    {
+        Task ExecuteAsync(CommandContext context);
+    }
 }
