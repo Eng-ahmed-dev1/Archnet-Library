@@ -58,10 +58,13 @@ namespace Archneter.Generators.CleanArchitecture
             await _cli.CreateProjectAsync("classlib", $"{name}.Infrastructure", infrastructurePath);
             await _cli.CreateProjectAsync("webapi", $"{name}.Api", apiPath);
 
-            await _cli.AddToSolutionAsync(slnPath, $"{domainPath}/{name}.Domain.csproj");
-            await _cli.AddToSolutionAsync(slnPath, $"{applicationPath}/{name}.Application.csproj");
-            await _cli.AddToSolutionAsync(slnPath, $"{infrastructurePath}/{name}.Infrastructure.csproj");
-            await _cli.AddToSolutionAsync(slnPath, $"{apiPath}/{name}.Api.csproj");
+            await _cli.AddMultipleToSolutionAsync(slnPath, new[]
+            {
+                $"{domainPath}/{name}.Domain.csproj",
+                $"{applicationPath}/{name}.Application.csproj",
+                $"{infrastructurePath}/{name}.Infrastructure.csproj",
+                $"{apiPath}/{name}.Api.csproj"
+            });
 
             await _cli.AddReferenceAsync(
                 $"{applicationPath}/{name}.Application.csproj",
@@ -71,13 +74,9 @@ namespace Archneter.Generators.CleanArchitecture
                 $"{infrastructurePath}/{name}.Infrastructure.csproj",
                 $"{applicationPath}/{name}.Application.csproj");
 
-            await _cli.AddReferenceAsync(
+            await _cli.AddReferencesAsync(
                 $"{apiPath}/{name}.Api.csproj",
-                $"{applicationPath}/{name}.Application.csproj");
-
-            await _cli.AddReferenceAsync(
-                $"{apiPath}/{name}.Api.csproj",
-                $"{infrastructurePath}/{name}.Infrastructure.csproj");
+                new[] { $"{applicationPath}/{name}.Application.csproj", $"{infrastructurePath}/{name}.Infrastructure.csproj" });
 
             if (!isDryRun)
             {

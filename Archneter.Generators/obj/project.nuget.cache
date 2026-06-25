@@ -1,8 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "1nMzdKpq5Qk=",
+  "dgSpecHash": "W1HI2UMk/iE=",
   "success": true,
   "projectFilePath": "/home/amed/Desktop/Repos/Archneter/Archneter.Generators/Archneter.Generators.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/amed/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.4/microsoft.codeanalysis.analyzers.3.3.4.nupkg.sha512",
+    "/home/amed/.nuget/packages/microsoft.codeanalysis.common/4.10.0/microsoft.codeanalysis.common.4.10.0.nupkg.sha512",
+    "/home/amed/.nuget/packages/microsoft.codeanalysis.csharp/4.10.0/microsoft.codeanalysis.csharp.4.10.0.nupkg.sha512",
+    "/home/amed/.nuget/packages/system.collections.immutable/8.0.0/system.collections.immutable.8.0.0.nupkg.sha512",
+    "/home/amed/.nuget/packages/system.reflection.metadata/8.0.0/system.reflection.metadata.8.0.0.nupkg.sha512",
+    "/home/amed/.nuget/packages/microsoft.netcore.app.ref/8.0.27/microsoft.netcore.app.ref.8.0.27.nupkg.sha512",
+    "/home/amed/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.27/microsoft.aspnetcore.app.ref.8.0.27.nupkg.sha512"
+  ],
   "logs": []
 }

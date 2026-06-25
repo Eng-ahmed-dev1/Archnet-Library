@@ -1,0 +1,11 @@
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Cli
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Cli.dll
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Cli.deps.json
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Cli.runtimeconfig.json
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Cli.pdb
+/home/amed/Desktop/Repos/Archneter/publish-before/Microsoft.Extensions.DependencyInjection.dll
+/home/amed/Desktop/Repos/Archneter/publish-before/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Core.dll
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Generators.dll
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Core.pdb
+/home/amed/Desktop/Repos/Archneter/publish-before/Archneter.Generators.pdb

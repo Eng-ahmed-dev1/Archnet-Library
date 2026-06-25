@@ -33,5 +33,15 @@ namespace Archneter.Generators.Infrastructure
         /// <param name="fromProjectPath">The path of the project that needs the reference.</param>
         /// <param name="toProjectPath">The path of the target project being referenced.</param>
         Task AddReferenceAsync(string fromProjectPath, string toProjectPath);
+
+        /// <summary>
+        /// Adds multiple project-to-project references.
+        /// </summary>
+        Task AddReferencesAsync(string fromProjectPath, IEnumerable<string> toProjectPaths);
+
+        /// <summary>
+        /// Adds multiple existing projects to a solution file.
+        /// </summary>
+        Task AddMultipleToSolutionAsync(string slnPath, IEnumerable<string> projectPaths);
     }
 }

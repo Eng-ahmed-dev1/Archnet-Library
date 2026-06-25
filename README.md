@@ -183,3 +183,37 @@ archneter new <ProjectName> --arch <type> [options]
     ```bash
     archneter new FullDemoApp --arch n-tier --tests true --dry-run
     ```
+
+### Refactor an Existing Project (v1.2.0+)
+Use the `refactor` command to intelligently analyze and transform an existing legacy codebase (e.g. monolithic or unstructured code) into a well-defined target architecture. Archneter handles creating the boundary projects, moving files, recalculating namespaces, rewiring cross-project dependencies, and even migrating NuGet package references (`<PackageReference>`).
+
+```bash
+archneter refactor --to <architecture> [--dir <path>] [options]
+```
+
+#### Options:
+*   `--to <architecture>`: Specifies the target architecture template. Supported values: `clean`, `microservices`, `modularmonolith`, `verticalslice`, `n-tier`.
+*   `--dir <path>`: Root directory of the project to refactor (default: current directory).
+*   `--deep-refactor`: **Optional.** Enables a Roslyn-based deep refactoring mode. Archneter will safely extract concrete direct instantiations (e.g., `new Repository()`), generate Interfaces (`IRepository`), and rewire the dependencies into Constructor Injections.
+*   `--skip-backup`: Skips the automatic backup step before refactoring.
+*   `--force`: Skips the confirmation prompt.
+*   `--dry-run`: Previews what would happen without touching the disk.
+
+#### Examples:
+
+1.  **Refactor an unstructured API into Clean Architecture:**
+    ```bash
+    archneter refactor --to clean
+    ```
+
+2.  **Refactor with Deep Dependency Extraction (Roslyn DI & Interface Generation):**
+    ```bash
+    archneter refactor --to clean --deep-refactor
+    ```
+
+3.  **Refactor an N-Tier monolithic application into Microservices without prompting:**
+    ```bash
+    archneter refactor --to microservices --dir ./LegacySystem --force
+    ```
+
+> **Note on NuGet Package Propagation:** During refactoring, Archneter analyzes your source `.csproj` files. If you move a file that depends on external packages (like `Dapper` or `Newtonsoft.Json`), Archneter ensures that those `<PackageReference>` tags are seamlessly copied to the new `.csproj` destination, guaranteeing that your projects compile with all required dependencies!

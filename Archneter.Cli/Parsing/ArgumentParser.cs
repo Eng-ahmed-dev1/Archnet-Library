@@ -10,7 +10,10 @@ namespace Archneter.Cli.Parsing
         /// </summary>
         private static readonly HashSet<string> _knownFlags = new(StringComparer.OrdinalIgnoreCase)
         {
-            "--dry-run"
+            "--dry-run",
+            "--skip-backup",
+            "--force",
+            "--deep-refactor"
         };
 
         public CommandContext Parse(string[] args)

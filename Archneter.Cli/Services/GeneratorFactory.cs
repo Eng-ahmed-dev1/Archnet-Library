@@ -13,7 +13,7 @@ namespace Archneter.Cli.Services;
 /// <summary>
 /// A factory responsible for resolving the appropriate architecture generator using Dependency Injection.
 /// </summary>
-public sealed class GeneratorFactory
+public class GeneratorFactory
 {
     private readonly IServiceProvider _serviceProvider;
 
@@ -32,7 +32,7 @@ public sealed class GeneratorFactory
     /// <param name="type">The architectural style to generate.</param>
     /// <param name="isDryRun">Whether to simulate execution without modifying the disk.</param>
     /// <returns>An instance of an <see cref="IArchitectureGenerator"/>.</returns>
-    public IArchitectureGenerator Create(ArchitectureType type, bool isDryRun = false)
+    public virtual IArchitectureGenerator Create(ArchitectureType type, bool isDryRun = false)
     {
         ICliService cli = isDryRun
             ? _serviceProvider.GetRequiredService<DryRunCliService>()

@@ -4,11 +4,12 @@ using Archneter.Cli.Parsing;
 using Archneter.Cli.Services;
 using Archneter.Generators.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Archneter.Generators.Refactoring;
 
 // 1. Setup Dependency Injection
 var services = new ServiceCollection();
 
-// Register Core CLI Services
+services.AddTransient<ICliService, DotnetCliService>();
 services.AddTransient<DotnetCliService>();
 services.AddTransient<DryRunCliService>();
 
@@ -17,7 +18,8 @@ services.AddSingleton<ArgumentParser>();
 services.AddSingleton<CommandRegistry>();
 services.AddSingleton<CommandDispatcher>();
 services.AddSingleton<GeneratorFactory>();
-
+services.AddTransient<ProjectAnalyzer>();
+services.AddSingleton<RefactoringStrategyFactory>();
 // Dynamically Register All Commands for DI resolution
 var commandTypes = typeof(IArchCommand).Assembly.GetTypes()
     .Where(t => typeof(IArchCommand).IsAssignableFrom(t) && t is { IsClass: true, IsAbstract: false });

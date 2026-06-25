@@ -53,6 +53,21 @@ namespace Archneter.Generators.Infrastructure
             return RunAsync($"add \"{fromProjectPath}\" reference \"{toProjectPath}\"", Directory.GetCurrentDirectory());
         }
 
+        public Task AddReferencesAsync(string fromProjectPath, IEnumerable<string> toProjectPaths)
+        {
+            var from = Path.GetFileNameWithoutExtension(fromProjectPath);
+            PrintSection($"reference  {from}  →  {toProjectPaths.Count()} projects");
+            var refs = string.Join(" ", toProjectPaths.Select(p => $"\"{p}\""));
+            return RunAsync($"add \"{fromProjectPath}\" reference {refs}", Directory.GetCurrentDirectory());
+        }
+
+        public Task AddMultipleToSolutionAsync(string slnPath, IEnumerable<string> projectPaths)
+        {
+            PrintSection($"add to solution  →  {projectPaths.Count()} projects");
+            var projs = string.Join(" ", projectPaths.Select(p => $"\"{p}\""));
+            return RunAsync($"sln \"{slnPath}\" add {projs}", Directory.GetCurrentDirectory());
+        }
+
         private void PrintSection(string label)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;

@@ -55,5 +55,17 @@ namespace Archneter.Generators.Infrastructure
         /// </summary>
         public Task AddReferenceAsync(string fromProjectPath, string toProjectPath)
             => RunAsync($"add \"{fromProjectPath}\" reference \"{toProjectPath}\"", Directory.GetCurrentDirectory());
+
+        public Task AddReferencesAsync(string fromProjectPath, IEnumerable<string> toProjectPaths)
+        {
+            var refs = string.Join(" ", toProjectPaths.Select(p => $"\"{p}\""));
+            return RunAsync($"add \"{fromProjectPath}\" reference {refs}", Directory.GetCurrentDirectory());
+        }
+
+        public Task AddMultipleToSolutionAsync(string slnPath, IEnumerable<string> projectPaths)
+        {
+            var projs = string.Join(" ", projectPaths.Select(p => $"\"{p}\""));
+            return RunAsync($"sln \"{slnPath}\" add {projs}", Directory.GetCurrentDirectory());
+        }
     }
 }
