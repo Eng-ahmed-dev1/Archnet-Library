@@ -86,6 +86,13 @@ public class ToVerticalSliceStrategy : BaseRefactoringStrategy
 
         PropagatePackageReferences(analyzedProject, Path.Combine(root, $"{name}.Api", $"{name}.Api.csproj"));
 
+        if (!isDryRun)
+        {
+            WriteHeader("Installing Main Packages");
+            await PackageInstaller.AddApplicationPackagesAsync(Cli, Path.Combine(root, $"{name}.Api", $"{name}.Api.csproj"));
+            await PackageInstaller.AddInfrastructurePackagesAsync(Cli, Path.Combine(root, $"{name}.Api", $"{name}.Api.csproj"), Archneter.Core.Enums.DatabaseType.SqlServer);
+        }
+
         ReportUnclassified(analyzedProject);
 
         WriteHeader("Done");

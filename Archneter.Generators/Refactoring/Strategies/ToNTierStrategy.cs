@@ -82,6 +82,13 @@ public class ToNTierStrategy : BaseRefactoringStrategy
             PropagatePackageReferences(analyzedProject, Path.Combine(root, proj));
         }
 
+        if (!isDryRun)
+        {
+            WriteHeader("Installing Main Packages");
+            await PackageInstaller.AddApplicationPackagesAsync(Cli, Path.Combine(root, $"{name}.BusinessLogic", $"{name}.BusinessLogic.csproj"));
+            await PackageInstaller.AddInfrastructurePackagesAsync(Cli, Path.Combine(root, $"{name}.DataAccess", $"{name}.DataAccess.csproj"), Archneter.Core.Enums.DatabaseType.SqlServer);
+        }
+
         ReportUnclassified(analyzedProject);
 
         WriteHeader("Done");

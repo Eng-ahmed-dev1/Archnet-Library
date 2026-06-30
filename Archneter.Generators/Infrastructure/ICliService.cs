@@ -43,5 +43,19 @@ namespace Archneter.Generators.Infrastructure
         /// Adds multiple existing projects to a solution file.
         /// </summary>
         Task AddMultipleToSolutionAsync(string slnPath, IEnumerable<string> projectPaths);
+
+        /// <summary>
+        /// Adds a NuGet package to a project.
+        /// </summary>
+        /// <param name="projectPath">The path to the project file.</param>
+        /// <param name="packageName">The name of the NuGet package.</param>
+        /// <param name="version">The optional version of the package.</param>
+        Task AddPackageAsync(string projectPath, string packageName, string version = null);
+
+        /// <summary>
+        /// Restores dependencies for a project or solution.
+        /// </summary>
+        /// <param name="projectOrSlnPath">The path to the project or solution file.</param>
+        Task RestoreProjectAsync(string projectOrSlnPath);
     }
 }

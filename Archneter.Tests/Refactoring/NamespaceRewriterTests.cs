@@ -31,7 +31,8 @@ public class NamespaceRewriterTests : IDisposable
     public void Rewrite_FileScopedNamespace_ReplacesCorrectly()
     {
         var path = CreateTempFile("namespace OldApp.Services;\npublic class Foo {}");
-        NamespaceRewriter.Rewrite(path, "OldApp", "NewApp.Application");
+        var map = new Dictionary<string, List<string>>();
+        NamespaceRewriter.Rewrite(path, "NewApp.Application", map);
         var content = File.ReadAllText(path);
         content.Should().Contain("namespace NewApp.Application;");
     }
@@ -40,7 +41,8 @@ public class NamespaceRewriterTests : IDisposable
     public void Rewrite_BlockScopedNamespace_ReplacesCorrectly()
     {
         var path = CreateTempFile("namespace OldApp.Services {\npublic class Foo {}\n}");
-        NamespaceRewriter.Rewrite(path, "OldApp", "NewApp.Application");
+        var map = new Dictionary<string, List<string>>();
+        NamespaceRewriter.Rewrite(path, "NewApp.Application", map);
         var content = File.ReadAllText(path);
         content.Should().Contain("namespace NewApp.Application {");
     }
@@ -49,7 +51,8 @@ public class NamespaceRewriterTests : IDisposable
     public void Rewrite_UsingDirective_ReplacesOldRootNamespace()
     {
         var path = CreateTempFile("using OldApp.Core;\nnamespace Test;");
-        NamespaceRewriter.Rewrite(path, "OldApp", "NewApp");
+        var map = new Dictionary<string, List<string>> { { "OldApp.Core", new List<string> { "NewApp.Core" } } };
+        NamespaceRewriter.Rewrite(path, "NewApp", map);
         var content = File.ReadAllText(path);
         content.Should().Contain("using NewApp.Core;");
     }
@@ -58,7 +61,8 @@ public class NamespaceRewriterTests : IDisposable
     public void Rewrite_UsingDirective_DoesNotReplaceUnrelatedNamespace()
     {
         var path = CreateTempFile("using System.Linq;\nnamespace Test;");
-        NamespaceRewriter.Rewrite(path, "OldApp", "NewApp");
+        var map = new Dictionary<string, List<string>> { { "OldApp.Core", new List<string> { "NewApp.Core" } } };
+        NamespaceRewriter.Rewrite(path, "NewApp", map);
         var content = File.ReadAllText(path);
         content.Should().Contain("using System.Linq;");
     }
@@ -66,7 +70,8 @@ public class NamespaceRewriterTests : IDisposable
     [Fact]
     public void Rewrite_NonExistentFile_DoesNotThrow()
     {
-        var action = () => NamespaceRewriter.Rewrite(Path.Combine(_tempDir, "none.cs"), "Old", "New");
+        var map = new Dictionary<string, List<string>>();
+        var action = () => NamespaceRewriter.Rewrite(Path.Combine(_tempDir, "none.cs"), "New", map);
         action.Should().NotThrow();
     }
 

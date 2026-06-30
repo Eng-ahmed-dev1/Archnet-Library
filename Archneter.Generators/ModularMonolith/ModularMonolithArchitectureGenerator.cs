@@ -81,6 +81,8 @@ namespace Archneter.Generators.ModularMonolith
                 $"{hostPath}/{name}.Host.csproj",
                 $"{sharedPath}/{name}.Shared.csproj");
 
+            await PackageInstaller.AddApiPackagesAsync(_cli, $"{hostPath}/{name}.Host.csproj");
+
             if (!isDryRun)
             {
                 CreateDirectories(
@@ -102,7 +104,8 @@ namespace Archneter.Generators.ModularMonolith
                     sharedPath,
                     hostPath,
                     isDryRun,
-                    options.GenerateTests
+                    options.GenerateTests,
+                    options.Database
                 );
             }
 
@@ -124,7 +127,8 @@ namespace Archneter.Generators.ModularMonolith
             string sharedPath,
             string hostPath,
             bool isDryRun,
-            bool generateTests)
+            bool generateTests,
+            Archneter.Core.Enums.DatabaseType dbType)
         {
             var prefix = $"{solutionName}.Modules.{module}";
             var modulePath = Path.Combine(modulesPath, module);
@@ -176,6 +180,10 @@ namespace Archneter.Generators.ModularMonolith
             await _cli.AddReferenceAsync(
                 $"{applicationPath}/{prefix}.Application.csproj",
                 $"{sharedPath}/{solutionName}.Shared.csproj");
+
+            await PackageInstaller.AddApplicationPackagesAsync(_cli, $"{applicationPath}/{prefix}.Application.csproj");
+            await PackageInstaller.AddInfrastructurePackagesAsync(_cli, $"{infrastructurePath}/{prefix}.Infrastructure.csproj", dbType);
+            await PackageInstaller.AddApiPackagesAsync(_cli, $"{presentationPath}/{prefix}.Presentation.csproj");
 
             // ── Folder structure ─────────────────────────────────────
             if (!isDryRun)

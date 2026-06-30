@@ -78,6 +78,10 @@ namespace Archneter.Generators.CleanArchitecture
                 $"{apiPath}/{name}.Api.csproj",
                 new[] { $"{applicationPath}/{name}.Application.csproj", $"{infrastructurePath}/{name}.Infrastructure.csproj" });
 
+            await PackageInstaller.AddApplicationPackagesAsync(_cli, $"{applicationPath}/{name}.Application.csproj");
+            await PackageInstaller.AddInfrastructurePackagesAsync(_cli, $"{infrastructurePath}/{name}.Infrastructure.csproj", options.Database);
+            await PackageInstaller.AddApiPackagesAsync(_cli, $"{apiPath}/{name}.Api.csproj");
+
             if (!isDryRun)
             {
                 CreateDirectories(

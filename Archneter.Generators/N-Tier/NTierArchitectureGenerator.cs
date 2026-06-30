@@ -69,6 +69,10 @@ namespace Archneter.Generators.NTier
                 $"{plPath}/{name}.PL.csproj",
                 $"{bllPath}/{name}.BLL.csproj");
 
+            await PackageInstaller.AddApplicationPackagesAsync(_cli, $"{bllPath}/{name}.BLL.csproj");
+            await PackageInstaller.AddInfrastructurePackagesAsync(_cli, $"{dalPath}/{name}.DAL.csproj", options.Database);
+            await PackageInstaller.AddApiPackagesAsync(_cli, $"{plPath}/{name}.PL.csproj");
+
             if (!isDryRun)
             {
                 CreateDirectories(

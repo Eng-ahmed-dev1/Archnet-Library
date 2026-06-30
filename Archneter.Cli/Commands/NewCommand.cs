@@ -143,19 +143,26 @@ public sealed class NewCommand : IArchCommand
             else
             {
                 // Option B — interactive wizard
-                Console.Write($"  How many {nounPlural}? (e.g. 3): ");
-                if (!int.TryParse(Console.ReadLine()?.Trim(), out var count) || count <= 0)
+                if (context.Flags.Contains("--force"))
                 {
-                    Console.WriteLine($"Error: invalid number of {nounPlural}.");
-                    return;
+                    serviceNames.Add("Core"); // Default fallback
                 }
-
-                for (int i = 1; i <= count; i++)
+                else
                 {
-                    Console.Write($"  {char.ToUpper(noun[0]) + noun.Substring(1)} {i} name: ");
-                    var svcName = Console.ReadLine()?.Trim() ?? string.Empty;
-                    if (!string.IsNullOrWhiteSpace(svcName))
-                        serviceNames.Add(svcName);
+                    Console.Write($"  How many {nounPlural}? (e.g. 3): ");
+                    if (!int.TryParse(Console.ReadLine()?.Trim(), out var count) || count <= 0)
+                    {
+                        Console.WriteLine($"Error: invalid number of {nounPlural}.");
+                        return;
+                    }
+
+                    for (int i = 1; i <= count; i++)
+                    {
+                        Console.Write($"  {char.ToUpper(noun[0]) + noun.Substring(1)} {i} name: ");
+                        var svcName = Console.ReadLine()?.Trim() ?? string.Empty;
+                        if (!string.IsNullOrWhiteSpace(svcName))
+                            serviceNames.Add(svcName);
+                    }
                 }
             }
 
@@ -166,13 +173,43 @@ public sealed class NewCommand : IArchCommand
             }
         }
 
+        // ── Database type ─────────────────────────────────────────────────────────
+        var databaseType = DatabaseType.SqlServer;
+        
+        if (context.Options.TryGetValue("--db", out var dbArg))
+        {
+            databaseType = dbArg.ToLowerInvariant() switch
+            {
+                "postgres" or "postgresql" or "2" => DatabaseType.PostgreSQL,
+                "mongo" or "mongodb" or "3" => DatabaseType.MongoDB,
+                _ => DatabaseType.SqlServer
+            };
+        }
+        else if (!context.Flags.Contains("--force"))
+        {
+            Console.WriteLine("\n  Select Database Provider:");
+            Console.WriteLine("  1. SQL Server (default)");
+            Console.WriteLine("  2. PostgreSQL");
+            Console.WriteLine("  3. MongoDB");
+            Console.Write("  Choice (1-3) [1]: ");
+            var dbChoice = Console.ReadLine()?.Trim();
+            
+            databaseType = dbChoice switch
+            {
+                "2" => DatabaseType.PostgreSQL,
+                "3" => DatabaseType.MongoDB,
+                _ => DatabaseType.SqlServer
+            };
+        }
+
         // ── Build options & run generator ─────────────────────────────────────────
         var options = new ProjectOptions
         {
             ProjectName = projectName,
             Architecture = archType,
             GenerateTests = generateTests,
-            ServiceNames = serviceNames
+            ServiceNames = serviceNames,
+            Database = databaseType
         };
 
         var generator = _factory.Create(archType, isDryRun);

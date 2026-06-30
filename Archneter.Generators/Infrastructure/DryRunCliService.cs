@@ -68,6 +68,22 @@ namespace Archneter.Generators.Infrastructure
             return RunAsync($"sln \"{slnPath}\" add {projs}", Directory.GetCurrentDirectory());
         }
 
+        public Task AddPackageAsync(string projectPath, string packageName, string version = null)
+        {
+            var proj = Path.GetFileName(projectPath);
+            var versionStr = string.IsNullOrWhiteSpace(version) ? "" : $" (v{version})";
+            PrintSection($"add package  {packageName}{versionStr}  →  {proj}");
+            var versionArg = string.IsNullOrWhiteSpace(version) ? "" : $" --version \"{version}\"";
+            return RunAsync($"add \"{projectPath}\" package {packageName}{versionArg} --no-restore", Directory.GetCurrentDirectory());
+        }
+
+        public Task RestoreProjectAsync(string projectOrSlnPath)
+        {
+            var target = Path.GetFileName(projectOrSlnPath);
+            PrintSection($"restore  →  {target}");
+            return RunAsync($"restore \"{projectOrSlnPath}\"", Directory.GetCurrentDirectory());
+        }
+
         private void PrintSection(string label)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;

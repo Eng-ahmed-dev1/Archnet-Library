@@ -67,5 +67,16 @@ namespace Archneter.Generators.Infrastructure
             var projs = string.Join(" ", projectPaths.Select(p => $"\"{p}\""));
             return RunAsync($"sln \"{slnPath}\" add {projs}", Directory.GetCurrentDirectory());
         }
+
+        public Task AddPackageAsync(string projectPath, string packageName, string version = null)
+        {
+            var versionArg = string.IsNullOrWhiteSpace(version) ? "" : $" --version \"{version}\"";
+            return RunAsync($"add \"{projectPath}\" package {packageName}{versionArg} --no-restore", Directory.GetCurrentDirectory());
+        }
+
+        public Task RestoreProjectAsync(string projectOrSlnPath)
+        {
+            return RunAsync($"restore \"{projectOrSlnPath}\"", Directory.GetCurrentDirectory());
+        }
     }
 }

@@ -36,6 +36,16 @@ public class AnalyzedProject
     /// Existing .csproj files found.
     /// </summary>
     public List<string> ExistingProjects { get; set; } = new();
+
+    /// <summary>
+    /// Indicates whether this project contains MVC structures like Views or AddControllersWithViews.
+    /// </summary>
+    public bool IsMvcProject { get; set; }
+
+    /// <summary>
+    /// Indicates whether this project appears to be a pure Web API (has controllers but no views).
+    /// </summary>
+    public bool IsApiProject { get; set; }
 }
 
 /// <summary>

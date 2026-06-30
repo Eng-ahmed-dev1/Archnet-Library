@@ -42,4 +42,9 @@ public class RefactorOptions
     /// If true, performs Roslyn-based deep refactoring (DI extraction, Interface generation).
     /// </summary>
     public bool DeepRefactor { get; set; }
+
+    /// <summary>
+    /// If true, removes the wwwroot directory when refactoring to API.
+    /// </summary>
+    public bool RemoveStaticFiles { get; set; }
 }

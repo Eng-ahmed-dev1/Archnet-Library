@@ -10,6 +10,7 @@ namespace Archneter.Cli.Commands;
 [Command("help")]
 [Description("Display available commands")]
 [CommandSyntax("help")]
+[CommandExample("archneter help")]
 public sealed class HelpCommand : IArchCommand
 {
     private readonly CommandRegistry _registry;

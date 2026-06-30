@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v8.0": {
-      "Archneter.Cli/1.2.1": {
+      "Archneter.Cli/1.4.0": {
         "dependencies": {
           "Archneter.Core": "1.0.0",
           "Archneter.Generators": "1.0.0",
@@ -209,7 +209,7 @@
     }
   },
   "libraries": {
-    "Archneter.Cli/1.2.1": {
+    "Archneter.Cli/1.4.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

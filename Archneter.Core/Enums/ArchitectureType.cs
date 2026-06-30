@@ -28,6 +28,11 @@ namespace Archneter.Core.Enums
         /// <summary>
         /// A traditional 3-tier architecture with Presentation, Business Logic, and Data Access layers.
         /// </summary>
-        NTier = 5
+        NTier = 5,
+
+        /// <summary>
+        /// A pure Web API architecture, often used as a target when refactoring an existing MVC application.
+        /// </summary>
+        Api = 6
     }
 }

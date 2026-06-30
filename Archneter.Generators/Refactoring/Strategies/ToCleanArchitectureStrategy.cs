@@ -94,6 +94,13 @@ public class ToCleanArchitectureStrategy : BaseRefactoringStrategy
             PropagatePackageReferences(analyzedProject, Path.Combine(root, proj));
         }
 
+        if (!isDryRun)
+        {
+            WriteHeader("Installing Main Packages");
+            await PackageInstaller.AddApplicationPackagesAsync(Cli, Path.Combine(root, $"{name}.Application", $"{name}.Application.csproj"));
+            await PackageInstaller.AddInfrastructurePackagesAsync(Cli, Path.Combine(root, $"{name}.Infrastructure", $"{name}.Infrastructure.csproj"), Archneter.Core.Enums.DatabaseType.SqlServer);
+        }
+
         // ── 6. Report unclassified files ──────────────────────────────────
         if (analyzedProject.UnclassifiedFiles.Any())
         {

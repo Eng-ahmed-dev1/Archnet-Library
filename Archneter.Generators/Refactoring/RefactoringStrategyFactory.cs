@@ -30,6 +30,7 @@ public class RefactoringStrategyFactory
             ArchitectureType.ModularMonolith   => new ToModularMonolithStrategy(cli),
             ArchitectureType.Microservices     => new ToMicroservicesStrategy(cli),
             ArchitectureType.NTier             => new ToNTierStrategy(cli),
+            ArchitectureType.Api               => new ToApiStrategy(cli),
             _ => throw new NotSupportedException($"No refactoring strategy for: {target}")
         };
     }

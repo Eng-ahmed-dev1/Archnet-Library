@@ -168,4 +168,33 @@ public class RefactorCommandTests : IDisposable
         _factoryMock.Verify(x => x.Create(expectedArch, It.IsAny<bool>()), Times.Once);
         _strategyMock.Verify(x => x.ExecuteAsync(It.Is<RefactorOptions>(o => o.TargetArchitecture == expectedArch), It.IsAny<AnalyzedProject>()), Times.Once);
     }
+
+    [Fact]
+    public async Task ExecuteAsync_WithMvcProject_ToCleanArchitecture_PreprocessesToApi()
+    {
+        var context = new CommandContext 
+        { 
+            Options = new() { { "--to", "clean" }, { "--dir", _tempDir } },
+            Flags = new() { "--force" }
+        };
+
+        var mvcAnalyzedProject = new AnalyzedProject { ProjectName = "TestApp", IsMvcProject = true };
+        _analyzerMock.SetupSequence(x => x.Analyze(It.IsAny<string>()))
+            .Returns(mvcAnalyzedProject) // First analysis detects MVC
+            .Returns(new AnalyzedProject { ProjectName = "TestApp", IsMvcProject = false, IsApiProject = true }); // Second analysis detects API
+
+        var apiStrategyMock = new Mock<IRefactoringStrategy>();
+        _factoryMock.Setup(x => x.Create(ArchitectureType.Api, It.IsAny<bool>())).Returns(apiStrategyMock.Object);
+
+        await _sut.ExecuteAsync(context);
+
+        // Should call pre-process strategy
+        apiStrategyMock.Verify(x => x.ExecuteAsync(It.IsAny<RefactorOptions>(), mvcAnalyzedProject), Times.Once);
+
+        // Should call analyzer twice (once initially, once after pre-processing)
+        _analyzerMock.Verify(x => x.Analyze(_tempDir), Times.Exactly(2));
+
+        // Should execute the final strategy with the newly analyzed API project
+        _strategyMock.Verify(x => x.ExecuteAsync(It.Is<RefactorOptions>(o => o.TargetArchitecture == ArchitectureType.CleanArchitecture && o.SkipBackup == true), It.Is<AnalyzedProject>(p => p.IsApiProject)), Times.Once);
+    }
 }

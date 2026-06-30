@@ -16,7 +16,8 @@ namespace Archneter.Cli.Commands;
     "  verticalslice    → Vertical Slice (feature-sliced folders inside one Web API)",
     "  modularmonolith  → Modular Monolith (.Host / .Shared / .Modules.{X})",
     "  microservices    → Microservices (.Gateway / .Shared / .Services.{X}.*)",
-    "  n-tier           → N-Tier (.DAL / .BLL / .PL)")]
+    "  n-tier           → N-Tier (.DAL / .BLL / .PL)",
+    "  api              → Pure Web API (Refactoring from MVC)")]
 [CommandOption("--dir <path>",
     "Root directory of the project to refactor (default: current directory)")]
 [CommandOption("--dry-run",
@@ -27,7 +28,11 @@ namespace Archneter.Cli.Commands;
     "Skip the confirmation prompt")]
 [CommandOption("--deep-refactor",
     "Optional deep refactoring mode (DI extraction & interface generation using Roslyn)")]
+[CommandOption("--remove-static-files",
+    "Removes the wwwroot directory when refactoring from MVC to API")]
 [CommandExample("archneter refactor --to clean")]
+[CommandExample("archneter refactor --to api --remove-static-files")]
+[CommandExample("archneter refactor --to clean --remove-static-files --force")]
 [CommandExample("archneter refactor --to verticalslice --dry-run")]
 [CommandExample("archneter refactor --to microservices --dir ./MyProject --force")]
 public sealed class RefactorCommand : IArchCommand
@@ -44,6 +49,7 @@ public sealed class RefactorCommand : IArchCommand
             ["microservices"]   = ArchitectureType.Microservices,
             ["n-tier"]          = ArchitectureType.NTier,
             ["ntier"]           = ArchitectureType.NTier,
+            ["api"]             = ArchitectureType.Api,
         };
 
     public RefactorCommand(ProjectAnalyzer analyzer, RefactoringStrategyFactory factory)
@@ -82,6 +88,7 @@ public sealed class RefactorCommand : IArchCommand
         var skipBackup   = context.Flags.Contains("--skip-backup") || context.Options.ContainsKey("--skip-backup");
         var force        = context.Flags.Contains("--force")       || context.Options.ContainsKey("--force");
         var deepRefactor = context.Flags.Contains("--deep-refactor") || context.Options.ContainsKey("--deep-refactor");
+        var removeStatic = context.Flags.Contains("--remove-static-files") || context.Options.ContainsKey("--remove-static-files");
 
         // ── Analyze ───────────────────────────────────────────────────────────────
         Console.WriteLine();
@@ -91,6 +98,21 @@ public sealed class RefactorCommand : IArchCommand
 
         var analyzed = _analyzer.Analyze(dir);
         PrintAnalysisReport(analyzed);
+
+        // ── Validation ────────────────────────────────────────────────────────────
+        if (targetArch == ArchitectureType.Api)
+        {
+            if (analyzed.IsApiProject)
+            {
+                WriteError("This project is already a pure Web API. Refactoring to API is not applicable.");
+                return;
+            }
+            if (!analyzed.IsMvcProject)
+            {
+                WriteError("This project does not appear to be an MVC project. Refactoring to API is only supported from MVC.");
+                return;
+            }
+        }
 
         // ── Confirmation ──────────────────────────────────────────────────────────
         if (!force && !isDryRun)
@@ -117,7 +139,31 @@ public sealed class RefactorCommand : IArchCommand
             SkipBackup         = skipBackup,
             Force              = force,
             DeepRefactor       = deepRefactor,
+            RemoveStaticFiles  = removeStatic,
         };
+
+        if (analyzed.IsMvcProject && targetArch != ArchitectureType.Api)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("MVC Project detected. Pre-processing it to a Pure Web API first...");
+            Console.ResetColor();
+
+            var preProcessStrategy = _factory.Create(ArchitectureType.Api, isDryRun);
+            await preProcessStrategy.ExecuteAsync(options, analyzed);
+            
+            if (!isDryRun)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("Re-analyzing the newly converted API project...");
+                Console.ResetColor();
+                analyzed = _analyzer.Analyze(dir);
+            }
+            
+            // Prevent double backup
+            options.SkipBackup = true;
+        }
 
         var strategy = _factory.Create(targetArch, isDryRun);
         await strategy.ExecuteAsync(options, analyzed);

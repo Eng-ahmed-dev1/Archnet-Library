@@ -1,4 +1,4 @@
-#  Archneter Architecture CLI
+# 🚀 Archneter Architecture CLI
 
 ![Archneter Logo](https://raw.githubusercontent.com/Eng-ahmed-dev1/Archneter-Library/main/Archneter.Cli/icon.png)
 
@@ -8,85 +8,14 @@
 
 **Archneter** is an enterprise-grade, extensible command-line interface (CLI) engineered to accelerate .NET application development. Built upon Microsoft's best practices and `Microsoft.Extensions.DependencyInjection`, Archneter eliminates manual boilerplate setup by automating the scaffolding of highly cohesive, scalable software architectures. 
 
-Whether you are building a lightweight API or a complex distributed system, Archneter configures your project folders, layers, solutions, and cross-project references in seconds—guaranteeing a standardized foundation every time.
+Whether you are building a lightweight API, refactoring a legacy MVC monolithic mess, or scaffolding a complex distributed system, Archneter configures your project folders, layers, solutions, cross-project references, and essential NuGet packages in seconds—guaranteeing a standardized foundation every time.
 
 ---
 
-## Project Structure
-
-The codebase is organized into three primary projects grouped under a single .NET solution (`archneter.slnx`):
-
-```text
-Archneter/
-├── Archneter.Core/          # Domain abstractions, models, and shared enums
-├── Archneter.Generators/    # Architecture-specific code generation logic
-└── Archneter.Cli/           # Command-Line Interface and argument dispatching
-```
-
----
-
-## Detailed Directory & File Breakdown
-
-### 1. [Archneter.Core](./Archneter.Core)
-This project defines the core abstractions, shared models, and configurations used across the solution. It does not depend on any other projects.
-
-*   **`Abstractions/`**
-    *   **`IArchitectureGenerator.cs`**: Defines the primary interface for all architecture generators. It exposes `Task GenerateAsync(ProjectOptions options)`.
-*   **`Enums/`**
-    *   **`ArchitectureType.cs`**: An enum representing the supported architecture styles:
-        *   `CleanArchitecture` (1)
-        *   `VerticalSlice` (2)
-        *   `ModularMonolith` (3)
-        *   `Microservices` (4)
-        *   `NTier` (5)
-*   **`Models/`**
-    *   **`ProjectOptions.cs`**: Data class holding configuration parameters specified by the user (e.g., `ProjectName`, `ArchitectureType`, `GenerateTests`, and `ServiceNames`).
-
----
-
-### 2. [Archneter.Generators](./Archneter.Generators)
-This project implements the architecture generators. It depends on `Archneter.Core` and uses the underlying system's `dotnet` CLI to perform project bootstrapping.
-
-*   **`CleanArchitecture/`**
-    *   **`CleanArchitectureGenerator.cs`**: Scaffolds a 4-layer architecture (`.Domain`, `.Application`, `.Infrastructure`, `.Api`).
-*   **`Microservices/`**
-    *   **`MicroservicesArchitectureGenerator.cs`**: Scaffolds an API Gateway, Shared Contracts, and multiple microservices. Each microservice gets its own internal Clean Architecture layers.
-*   **`ModularMonolith/`**
-    *   **`ModularMonolithArchitectureGenerator.cs`**: Scaffolds a single Host API, a Shared project, and separates features into independent module class libraries.
-*   **`VerticalSlice/`**
-    *   **`VerticalSliceArchitectureGenerator.cs`**: Scaffolds a highly cohesive single Web API project with feature-sliced folders (`Commands`, `Queries`, `DTOs`, `Endpoints`).
-*   **`N-Tier/`**
-    *   **`NTierArchitectureGenerator.cs`**: Scaffolds a traditional 3-tier architecture (`.DAL`, `.BLL`, `.PL`).
-*   **`Infrastructure/`**
-    *   **`DotnetCliService.cs`**: Runs actual `dotnet` CLI commands (`new`, `sln`, `add reference`).
-    *   **`DryRunCliService.cs`**: Simulates the CLI execution for the `--dry-run` flag, printing the execution plan without modifying the disk.
-
----
-
-### 3. [Archneter.Cli](./Archneter.Cli)
-The entry point of the CLI application. It handles parsing command-line parameters, matching them to commands, and executing actions.
-
-*   **`Commands/`**
-    *   **`NewCommand.cs`**: Implements the `new` command. Parses the project name, selected architecture flags, and feature/module flags. Contains an interactive wizard fallback.
-    *   **`HelpCommand.cs`**: Displays dynamic and formatted usage instructions.
-*   **`Parsing/`**
-    *   **`ArgumentParser.cs`**: Maps console arguments into a structured `CommandContext`.
-*   **`Services/`**
-    *   **`CommandRegistry.cs`**: Discovers and manages CLI commands dynamically.
-    *   **`GeneratorFactory.cs`**: Resolves the appropriate implementation of `IArchitectureGenerator` based on the specified architecture type and dry-run state.
-
----
-
-## How to Get Started
+## 🛠️ How to Get Started
 
 ### Prerequisites
-*   [.NET SDK](https://dotnet.microsoft.com/download)
-
-### Build the Tool
-To build the solution, run:
-```bash
-dotnet build
-```
+*   [.NET 8.0 or later SDK](https://dotnet.microsoft.com/download)
 
 ### Install the Tool (Global)
 Archneter is packaged as a .NET Global Tool. You can install it globally on your machine by running:
@@ -94,134 +23,145 @@ Archneter is packaged as a .NET Global Tool. You can install it globally on your
 dotnet tool install -g Archneter
 ```
 
-### Troubleshooting: `archneter: command not found`
-The .NET SDK usually adds the global tools directory to your system's `PATH` automatically. However, if your terminal doesn't recognize the `archneter` command after installation, you must manually add the `.dotnet/tools` directory to your `PATH`:
-
-#### Windows
-1. Open Command Prompt and run:
-   ```cmd
-   setx PATH "%PATH%;%USERPROFILE%\.dotnet\tools"
-   ```
-2. Restart your Command Prompt or PowerShell.
-
-#### Linux & macOS
-1. Open your terminal and append the export command to your shell profile (e.g., `~/.bashrc`, `~/.zshrc`, or `~/.profile`):
-   ```bash
-   echo 'export PATH="$PATH:$HOME/.dotnet/tools"' >> ~/.bashrc
-   ```
-2. Apply the changes immediately:
-   ```bash
-   source ~/.bashrc  # (or source ~/.zshrc)
-   ```
-
-### Run from Source (Development)
-If you are developing or testing locally without installing:
-```bash
-dotnet run --project Archneter.Cli/Archneter.Cli.csproj -- [command] [options]
-```
+*Note: If `archneter` is not recognized, ensure your `~/.dotnet/tools` directory is added to your system's PATH.*
 
 ---
 
-## Usage Guide
+## 📖 Command Catalog
 
-### Display Help
-To see all commands and configurations, run the `help` command:
-```bash
-archneter help
-```
+Archneter is designed to be as simple or as advanced as you need. Below is the complete catalog of commands, ranging from simple scaffolding to intelligent, AI-like deep code refactoring.
 
-### Create a New Project
-Use the `new` command to generate a template solution.
+### 1️⃣ The `new` Command (Project Scaffolding)
+Generates a brand-new, production-ready solution from scratch, pre-configured with industry-standard NuGet packages (MediatR, FluentValidation, Swagger, EF Core) and your database provider of choice.
 
+**Syntax:**
 ```bash
 archneter new <ProjectName> --arch <type> [options]
 ```
 
-#### Options:
-*   `--arch <type>`: Specifies the architecture template. Supported values:
-    *   `clean` (Clean Architecture - Default)
-    *   `microservices` (Microservices)
-    *   `modularmonolith` (Modular Monolith)
-    *   `verticalslice` (Vertical Slice)
-    *   `n-tier` (N-Tier)
-*   `--services <names>`: Comma-separated service names *(microservices only)*
-*   `--modules <names>`: Comma-separated module names *(modular monolith only)*
-*   `--features <names>`: Comma-separated feature names *(vertical slice only)*
-*   `--tests <true|false>`: Scaffolds accompanying unit and integration test projects. (Default: `false`)
-*   `--dry-run`: Previews the generated structure in the terminal without creating any files on disk.
+#### Supported Architectures (`--arch`):
+*   `clean` (Clean Architecture - Default)
+*   `microservices` (Microservices)
+*   `modularmonolith` (Modular Monolith)
+*   `verticalslice` (Vertical Slice)
+*   `n-tier` (N-Tier)
 
-> **Note:** If you forget to provide the `--services`, `--modules`, or `--features` flags for their respective architectures, Archneter will trigger a smart **interactive wizard** asking you for the count and names dynamically!
+#### Examples: From Simple to Advanced
 
-#### Examples:
+**🟢 Simple: Standard Clean Architecture**
+Scaffolds a 4-layer Clean Architecture (Domain, Application, Infrastructure, API). The tool will interactively prompt you for your Database Provider (SQL Server, PostgreSQL, MongoDB).
+```bash
+archneter new CleanApp --arch clean
+```
 
-1.  **Generate a standard Clean Architecture solution:**
-    ```bash
-    archneter new CleanApp --arch clean --tests true
-    ```
+**🟡 Intermediate: Vertical Slice with Test Projects**
+Scaffolds a highly cohesive API organized by Features rather than technical layers, and generates accompanying xUnit test projects.
+```bash
+archneter new SliceApp --arch verticalslice --features Orders,Cart,Payments --tests true
+```
 
-2.  **Generate a traditional N-Tier architecture:**
-    ```bash
-    archneter new LegacyApp --arch n-tier --tests true
-    ```
+**🟠 Advanced: Microservices Ecosystem**
+Scaffolds a full microservices ecosystem (API Gateway, Shared Contracts, and independent Microservices, each with their own internal Clean Architecture).
+```bash
+archneter new DistributedApp --arch microservices --services Order,Product,Identity --tests true
+```
 
-3.  **Generate a Microservices architecture with specific services:**
-    ```bash
-    archneter new DistributedApp --arch microservices --services Order,Product,Identity --tests true
-    ```
+**🔴 Expert: Dry-Run Preview**
+Curious about what the Modular Monolith will look like? Use `--dry-run` to print the exact execution plan and folder tree without modifying your disk.
+```bash
+archneter new MonolithApp --arch modularmonolith --modules Sales,Catalog --dry-run
+```
 
-4.  **Generate a Modular Monolith with specific modules:**
-    ```bash
-    archneter new MonolithApp --arch modularmonolith --modules Sales,Catalog --tests true
-    ```
+---
 
-5.  **Generate a Vertical Slice architecture with specific features:**
-    ```bash
-    archneter new SliceApp --arch verticalslice --features Orders,Cart --tests true
-    ```
+### 2️⃣ The `refactor` Command (Intelligent Modernization)
+This is Archneter's most powerful feature. It intelligently analyzes an existing legacy codebase (like a monolithic API or an old MVC project) and transforms it into a well-defined target architecture. It handles creating boundary projects, moving files, recalculating namespaces, rewiring cross-project dependencies, and migrating NuGet packages.
 
-6.  **Preview execution using Dry-Run:**
-    ```bash
-    archneter new FullDemoApp --arch n-tier --tests true --dry-run
-    ```
-
-### Refactor an Existing Project (v1.2.0+)
-Use the `refactor` command to intelligently analyze and transform an existing legacy codebase (e.g. monolithic or unstructured code) into a well-defined target architecture. Archneter handles creating the boundary projects, moving files, recalculating namespaces, rewiring cross-project dependencies, and even migrating NuGet package references (`<PackageReference>`).
-
+**Syntax:**
 ```bash
 archneter refactor --to <architecture> [--dir <path>] [options]
 ```
 
-#### Options:
-*   `--to <architecture>`: Specifies the target architecture template. Supported values: `clean`, `microservices`, `modularmonolith`, `verticalslice`, `n-tier`.
-*   `--dir <path>`: Root directory of the project to refactor (default: current directory).
-*   `--deep-refactor`: **Optional.** Enables a Roslyn-based deep refactoring mode. Archneter will safely extract concrete direct instantiations (e.g., `new Repository()`), generate Interfaces (`IRepository`), and rewire the dependencies into Constructor Injections.
-*   `--skip-backup`: Skips the automatic backup step before refactoring.
-*   `--force`: Skips the confirmation prompt.
-*   `--dry-run`: Previews what would happen without touching the disk.
+#### Supported Targets (`--to`):
+`clean`, `microservices`, `modularmonolith`, `verticalslice`, `n-tier`, `api`.
 
-#### Examples:
+#### Examples: From Simple to Advanced
 
-1.  **Refactor an unstructured API into Clean Architecture:**
-    ```bash
-    archneter refactor --to clean
-    ```
+**🟢 Simple: Unstructured API to Clean Architecture**
+Takes a folder full of unstructured code and intelligently sorts it into Domain, Application, Infrastructure, and API layers based on advanced heuristics.
+```bash
+archneter refactor --to clean
+```
 
-2.  **Refactor with Deep Dependency Extraction (Roslyn DI & Interface Generation):**
-    ```bash
-    archneter refactor --to clean --deep-refactor
-    ```
+**🟡 Intermediate: MVC to Pure Web API**
+Strips away UI components (`Views`, `Pages`, `wwwroot`), converts `Controller` to `ControllerBase`, injects Swagger, and prints a Refactoring Report highlighting any endpoints requiring manual payload updates.
+```bash
+archneter refactor --to api --remove-static-files
+```
 
-3.  **Refactor an N-Tier monolithic application into Microservices without prompting:**
-    ```bash
-    archneter refactor --to microservices --dir ./LegacySystem --force
-    ```
+**🟠 Advanced: The MVC "Magic Pipeline"**
+Pass an MVC project and ask for Clean Architecture! Archneter will automatically pre-process the MVC project into a Pure Web API, and then instantly pipeline it into a Clean Architecture solution—**all in one step!** Core packages (MediatR, EF Core) are automatically injected into the newly formed layers.
+```bash
+archneter refactor --to clean --remove-static-files --force
+```
 
-> **Note on NuGet Package Propagation:** During refactoring, Archneter analyzes your source `.csproj` files. If you move a file that depends on external packages (like `Dapper` or `Newtonsoft.Json`), Archneter ensures that those `<PackageReference>` tags are seamlessly copied to the new `.csproj` destination, guaranteeing that your projects compile with all required dependencies!
+**🔴 Expert: Deep Dependency Extraction**
+Enables a Roslyn-based deep refactoring mode. Archneter parses your syntax trees, finds tightly coupled concrete instantiations (e.g., `new SqlUserRepository()`), generates interfaces (`IUserRepository`), extracts them to the Application/Domain layer, and rewires the original classes to use Constructor Injection.
+```bash
+archneter refactor --to clean --deep-refactor
+```
 
 ---
 
-## What's New in v1.2.1
-This patch release brings critical stability improvements for the `refactor` command when processing complex, real-world repositories (like CQRS architectures):
-- **Intelligent Module/Service Inference:** Enhanced the heuristics in `Microservices` and `Modular Monolith` refactoring to correctly parse feature-based directories (e.g. `UseCases/`, `Features/`) and recursively strip CQRS verbs/suffixes. This prevents the tool from generating excessive projects for each individual command/query.
-- **Resilient File Operations:** Implemented a robust retry mechanism to handle transient `.NET` background locks (e.g., MSBuild/OmniSharp locking files during scaffold) that previously caused `IOException` crashes.
-- **Solution File Discovery:** Improved project name inference to prioritize existing `.sln` and `.slnx` files, preventing `dotnet sln add` failures when the root directory name differs from the actual solution name.
+### 3️⃣ The `ui` Command (Web Dashboard) 🌐
+Launch an interactive, visually stunning Web Dashboard to configure and generate your architecture from the browser! 
+
+**Syntax:**
+```bash
+archneter ui
+```
+**Features:**
+- **Zero-Touch Configuration**: Select architectures, define microservices/modules, and toggle tests via a beautiful UI.
+- **Live Console Tracking**: Watch the execution logs live as Archneter builds your project in real-time.
+- **Speed & Stability**: Lightning-fast generation with automated `--no-restore` batching.
+- **Direct Explorer Integration**: Instantly open the generated project folder in your OS file explorer with a single click.
+
+---
+
+### 4️⃣ The `help` Command (Documentation)
+Displays the complete list of available CLI commands, options, arguments, and examples directly in your terminal.
+
+**Syntax:**
+```bash
+archneter help
+```
+
+---
+
+### 5️⃣ The `--version` Flag
+Checks the currently installed version of Archneter.
+
+**Syntax:**
+```bash
+archneter --version
+```
+
+---
+
+## 🌟 Release Notes
+
+### What's New in v1.4.0 (Latest)
+- **Web UI Dashboard (`archneter ui`)**: Added a visually stunning, interactive web interface to scaffold architectures directly from the browser. Includes live console tracking, one-click folder opening, and zero-touch configuration.
+- **Lightning Fast Restores**: Implemented `--no-restore` batching for NuGet packages, drastically reducing scaffolding time for complex architectures by up to 10x!
+- **Non-Interactive Execution**: Added the `--force` flag to skip interactive prompts (Database, Services) and intelligently fallback to defaults, which powers the new UI pipeline.
+
+### What's New in v1.3.1
+- **Main Packages Auto-Injection:** The `refactor` command now automatically installs essential enterprise NuGet packages (`MediatR`, `FluentValidation`, `EF Core`) into the newly generated architecture layers (Application/Infrastructure) during the refactoring process, matching the robust behavior of the `new` command!
+
+### What's New in v1.3.0
+- **Intelligent MVC Refactoring & Pipelining:** When refactoring a legacy MVC project to any architecture (e.g., `--to clean` or `--to microservices`), Archneter intelligently detects the MVC components. It executes a complete cleanup (converting it into a Pure Web API by removing `Views`, rewriting `ControllerBase`, and injecting `Swagger`) in the background, then seamlessly pipelines the clean API into your requested target architecture!
+- **Refactoring Report:** After an MVC conversion, Archneter prints a beautiful summary report detailing updated controllers and explicitly warns you about any endpoints that still return `View()`, `PartialView()`, or `RedirectToAction()`.
+
+### What's New in v1.2.1
+- **Intelligent Module/Service Inference:** Enhanced heuristics in `Microservices` and `Modular Monolith` refactoring to correctly parse feature-based directories and recursively strip CQRS verbs, preventing the generation of excessive projects.
+- **Resilient File Operations:** Robust retry mechanism to handle transient `.NET` background locks (MSBuild/OmniSharp) preventing `IOException` crashes.

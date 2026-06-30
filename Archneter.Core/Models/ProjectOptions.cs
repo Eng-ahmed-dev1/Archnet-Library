@@ -26,5 +26,10 @@ namespace Archneter.Core.Models
         /// Gets or sets the list of specific service, module, or feature names to scaffold internally.
         /// </summary>
         public List<string> ServiceNames { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the chosen database provider type.
+        /// </summary>
+        public DatabaseType Database { get; set; } = DatabaseType.SqlServer;
     }
 }

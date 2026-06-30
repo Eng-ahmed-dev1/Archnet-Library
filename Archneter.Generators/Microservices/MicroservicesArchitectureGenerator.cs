@@ -114,7 +114,8 @@ namespace Archneter.Generators.Microservices
                     slnPath,
                     contractsPath,
                     isDryRun,
-                    options.GenerateTests
+                    options.GenerateTests,
+                    options.Database
                 );
             }
 
@@ -135,7 +136,8 @@ namespace Archneter.Generators.Microservices
             string slnPath,
             string contractsPath,
             bool isDryRun,
-            bool generateTests)
+            bool generateTests,
+            Archneter.Core.Enums.DatabaseType dbType)
         {
             var prefix = $"{solutionName}.{service}";
             var servicePath = Path.Combine(srcPath, $"{prefix}.Service");
@@ -181,6 +183,10 @@ namespace Archneter.Generators.Microservices
             await _cli.AddReferenceAsync(
                 $"{applicationPath}/{prefix}.Application.csproj",
                 $"{contractsPath}/{solutionName}.Contracts.csproj");
+
+            await PackageInstaller.AddApplicationPackagesAsync(_cli, $"{applicationPath}/{prefix}.Application.csproj");
+            await PackageInstaller.AddInfrastructurePackagesAsync(_cli, $"{infrastructurePath}/{prefix}.Infrastructure.csproj", dbType);
+            await PackageInstaller.AddApiPackagesAsync(_cli, $"{apiPath}/{prefix}.Api.csproj");
 
             // ── Folder structure ─────────────────────────────────────
             if (!isDryRun)

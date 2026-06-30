@@ -93,6 +93,32 @@ public class ProjectAnalyzer
                 result.Files.Add(classified);
         }
 
+        // Detect MVC vs API
+        var hasViewsDir = Directory.GetDirectories(directory, "Views", SearchOption.AllDirectories)
+                                   .Any(d => !IsInSkippedFolder(d, directory));
+        var hasPagesDir = Directory.GetDirectories(directory, "Pages", SearchOption.AllDirectories)
+                                   .Any(d => !IsInSkippedFolder(d, directory));
+        var hasCshtml = Directory.GetFiles(directory, "*.cshtml", SearchOption.AllDirectories)
+                                 .Any(f => !IsInSkippedFolder(f, directory));
+        
+        var programFiles = result.Files.Where(f => f.FileName == "Program.cs" || f.FileName == "Startup.cs");
+        var hasAddControllersWithViews = false;
+        var hasAddControllers = false;
+
+        foreach (var pf in programFiles)
+        {
+            try
+            {
+                var content = File.ReadAllText(pf.SourcePath);
+                if (content.Contains("AddControllersWithViews")) hasAddControllersWithViews = true;
+                if (content.Contains("AddControllers()")) hasAddControllers = true;
+            }
+            catch { }
+        }
+
+        result.IsMvcProject = hasViewsDir || hasPagesDir || hasCshtml || hasAddControllersWithViews;
+        result.IsApiProject = !result.IsMvcProject && hasAddControllers;
+
         return result;
     }
 

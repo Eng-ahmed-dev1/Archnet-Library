@@ -57,6 +57,10 @@ namespace Archneter.Generators.VerticalSlice
             await _cli.CreateProjectAsync("webapi", $"{name}.Api", apiPath);
             await _cli.AddToSolutionAsync(slnPath, $"{apiPath}/{name}.Api.csproj");
 
+            await PackageInstaller.AddApplicationPackagesAsync(_cli, $"{apiPath}/{name}.Api.csproj");
+            await PackageInstaller.AddInfrastructurePackagesAsync(_cli, $"{apiPath}/{name}.Api.csproj", options.Database);
+            await PackageInstaller.AddApiPackagesAsync(_cli, $"{apiPath}/{name}.Api.csproj");
+
             if (!isDryRun)
             {
                 // Create foundational folders
